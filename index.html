@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>你的隐藏星座能量是哪一种？</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(160deg, #2b215c 0%, #4a3a9e 55%, #6b57c9 100%);
+    color: #fff; min-height: 100vh;
+    display: flex; justify-content: center; align-items: flex-start;
+  }
+  #app { width: 100%; max-width: 480px; padding: 24px 20px 40px; }
+  .screen { display: none; }
+  .screen.active { display: block; animation: fade .35s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: none;} }
+
+  .stars { font-size: 28px; text-align: center; margin-bottom: 8px; letter-spacing: 6px; }
+  h1 { font-size: 24px; font-weight: 600; text-align: center; line-height: 1.4; margin-bottom: 14px; }
+  .sub { text-align: center; font-size: 14px; opacity: .82; line-height: 1.7; margin-bottom: 28px; }
+
+  .btn {
+    display: block; width: 100%; padding: 15px; border: none; border-radius: 14px;
+    background: #ffd86b; color: #3a2a06; font-size: 16px; font-weight: 600;
+    cursor: pointer; margin-top: 10px; transition: transform .15s;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn.ghost { background: rgba(255,255,255,.14); color: #fff; }
+
+  .progress { height: 6px; background: rgba(255,255,255,.18); border-radius: 99px; margin-bottom: 18px; overflow: hidden; }
+  .progress > i { display: block; height: 100%; background: #ffd86b; width: 0; transition: width .3s; }
+  .qcount { font-size: 13px; opacity: .8; margin-bottom: 8px; }
+  .qtext { font-size: 18px; font-weight: 500; line-height: 1.6; margin-bottom: 18px; }
+  .opt {
+    display: block; width: 100%; text-align: left; padding: 15px 16px; margin-bottom: 12px;
+    background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.18);
+    border-radius: 14px; color: #fff; font-size: 15px; line-height: 1.5; cursor: pointer;
+    transition: all .15s;
+  }
+  .opt:active { background: rgba(255,216,107,.22); border-color: #ffd86b; }
+
+  .result-tag { display:inline-block; padding:4px 12px; border-radius:99px; background:rgba(255,216,107,.2); color:#ffd86b; font-size:13px; margin-bottom:12px; }
+  .result-title { font-size: 26px; font-weight: 600; margin-bottom: 6px; }
+  .result-const { font-size: 14px; opacity: .85; margin-bottom: 16px; }
+  .result-desc { font-size: 15px; line-height: 1.85; opacity: .94; margin-bottom: 16px;
+    background: rgba(255,255,255,.08); padding: 16px; border-radius: 14px; }
+  .result-quote { font-size: 15px; text-align: center; color: #ffd86b; font-weight: 500;
+    padding: 14px; border-top: 1px dashed rgba(255,255,255,.3); border-bottom: 1px dashed rgba(255,255,255,.3); margin-bottom: 20px; line-height:1.6; }
+  .sharecard { width: 100%; border-radius: 14px; margin-bottom: 14px; display: none; }
+  .tip { text-align: center; font-size: 12px; opacity: .7; margin-top: 10px; line-height: 1.6; }
+  .foot { text-align:center; font-size:12px; opacity:.6; margin-top:22px; line-height:1.7; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- 封面 -->
+  <section id="cover" class="screen active">
+    <div class="stars">✦ ✧ ✦</div>
+    <h1>你的隐藏星座能量<br>是哪一种？</h1>
+    <p class="sub">不考星座知识，只测你骨子里的能量类型。<br>8 个小问题，2 分钟，看懂真实的自己。</p>
+    <button class="btn" onclick="start()">开始测试 ✨</button>
+    <p class="foot">关注【时光里的星与心】<br>回复「测试」随时再测</p>
+  </section>
+
+  <!-- 答题 -->
+  <section id="quiz" class="screen">
+    <div class="progress"><i id="bar"></i></div>
+    <div class="qcount" id="qcount"></div>
+    <div class="qtext" id="qtext"></div>
+    <div id="opts"></div>
+  </section>
+
+  <!-- 结果 -->
+  <section id="result" class="screen">
+    <div style="text-align:center">
+      <span class="result-tag" id="r-tag"></span>
+      <div class="result-title" id="r-title"></div>
+      <div class="result-const" id="r-const"></div>
+    </div>
+    <div class="result-desc" id="r-desc"></div>
+    <div class="result-quote" id="r-quote"></div>
+    <img class="sharecard" id="card" alt="分享卡">
+    <button class="btn" onclick="makeCard()">生成我的分享卡 📲</button>
+    <button class="btn ghost" onclick="restart()">再测一次</button>
+    <p class="tip">长按上方分享卡即可保存 / 转发给朋友</p>
+    <p class="foot">关注【时光里的星与心】回复「测试」随时再测<br>你的能量，值得被看见。</p>
+  </section>
+
+</div>
+
+<script>
+var questions = [
+  { q:"周末最想怎么过？", o:[
+    {t:"窝在家里做饭打扫，把小窝收拾舒服", d:"S"},
+    {t:"背起包去没去过的地方晃", d:"F"},
+    {t:"关掉手机，死磕一个拖了很久的项目", d:"G"},
+    {t:"约朋友来家里聊天，或去陪陪家人", d:"H"} ] },
+  { q:"朋友找你吐槽，你第一反应是？", o:[
+    {t:"默默陪着，帮 TA 把烂摊子接过来", d:"S"},
+    {t:"拉 TA 出去浪一圈，别想了", d:"F"},
+    {t:"帮 TA 拆问题、找解决方案", d:"G"},
+    {t:"先共情，让 TA 把情绪倒干净", d:"H"} ] },
+  { q:"做决定时你更靠？", o:[
+    {t:"安稳感，别让在乎的人担心", d:"S"},
+    {t:"当下爽不爽、想不想", d:"F"},
+    {t:"逻辑和长期收益", d:"G"},
+    {t:"心里舒不舒服、对人暖不暖", d:"H"} ] },
+  { q:"失恋后你的典型状态？", o:[
+    {t:"很快收拾好，把日子过回正轨、照顾好自己", d:"S"},
+    {t:"换个环境，认识新的人，翻篇快", d:"F"},
+    {t:"复盘到底哪里出了问题，下次不踩", d:"G"},
+    {t:"难过很久，但会把温柔留给下一个人", d:"H"} ] },
+  { q:"别人对你的第一印象常是？", o:[
+    {t:"靠谱、让人安心", d:"S"},
+    {t:"有趣、捉摸不透", d:"F"},
+    {t:"专注、有想法", d:"G"},
+    {t:"温柔、好相处", d:"H"} ] },
+  { q:"你最怕的关系状态是？", o:[
+    {t:"没人靠、孤立无援", d:"S"},
+    {t:"被绑死、失去自我", d:"F"},
+    {t:"虚度、没长进", d:"G"},
+    {t:"冷漠、互相伤害", d:"H"} ] },
+  { q:"遇到困难你最先？", o:[
+    {t:"扛起来，先护住身边人", d:"S"},
+    {t:"绕开它，换条路走", d:"F"},
+    {t:"拆解它，一步步解决", d:"G"},
+    {t:"找人聊聊，被理解就有力气", d:"H"} ] },
+  { q:"用一种天气形容你？", o:[
+    {t:"晴好的午后，安稳", d:"S"},
+    {t:"忽晴忽雨的风", d:"F"},
+    {t:"持续的山风，有劲", d:"G"},
+    {t:"初春细雨，润物", d:"H"} ] }
+];
+
+var results = {
+  S: { tag:"守护型能量", title:"你是「守护型」",
+       const:"对应星座气质：金牛 / 巨蟹 / 摩羯",
+       desc:"你天生有一种让人安心的力量。不张扬、不抢戏，却总在关键时刻把身边人稳稳接住。你给的踏实，不是嘴上的承诺，而是行动里的一日三餐、风雨同舟。很多人闯荡累了，第一个想回的地方，就是你这里。",
+       quote:"你给的安稳，是别人最舍不得弄丢的。" },
+  F: { tag:"自由型能量", title:"你是「自由型」",
+       const:"对应星座气质：双子 / 射手 / 水瓶",
+       desc:"你的灵魂里住着风。你害怕被定义、被绑死，比起安稳的笼子，你更想要辽阔的远方。你有趣、跳脱、点子多，走到哪都能点亮气氛。你活成的样子，未必人人懂，却是很多人不敢选的那种自由。",
+       quote:"你活成的样子，是很多人不敢选的自由。" },
+  G: { tag:"深耕型能量", title:"你是「深耕型」",
+       const:"对应星座气质：处女 / 摩羯 / 天蝎",
+       desc:"你信长期主义。一件事要么不做，做了就默默扎根、死磕到底。你不爱虚的，不追风口，只把眼前的每一步踩实。别人看不见你熬的夜，时间却把结果都还给了你。你的靠谱，是你最硬的底层代码。",
+       quote:"你默默扎根的样子，时间都看得到。" },
+  H: { tag:"治愈型能量", title:"你是「治愈型」",
+       const:"对应星座气质：巨蟹 / 双鱼 / 天秤",
+       desc:"你天生带着温度。你敏感、共情、懂得接住别人的情绪，随口一句温柔，就能抚平谁某一天的褶皱。你不刻意当光，却总在不经意间照亮谁。世界偶尔很冷，而你，是那种让人想靠近的暖。",
+       quote:"你随口一句温柔，救过谁的某一天。" }
+};
+
+var i = 0, score = {S:0,F:0,G:0,H:0};
+var dn = {S:"守护",F:"自由",G:"深耕",H:"治愈"};
+
+function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
+
+function start(){ i=0; score={S:0,F:0,G:0,H:0}; render(); show('quiz'); }
+
+function render(){
+  var q = questions[i];
+  document.getElementById('qcount').textContent = "第 " + (i+1) + " / " + questions.length + " 题";
+  document.getElementById('bar').style.width = ((i)/questions.length*100) + "%";
+  document.getElementById('qtext').textContent = q.q;
+  var box = document.getElementById('opts'); box.innerHTML = "";
+  q.o.forEach(function(op, idx){
+    var b = document.createElement('button');
+    b.className = "opt"; b.textContent = op.t;
+    b.onclick = function(){ choose(op.d); };
+    box.appendChild(b);
+  });
+}
+
+function choose(d){ score[d]++; i++;
+  if(i < questions.length){ render(); }
+  else { document.getElementById('bar').style.width = "100%"; finish(); }
+}
+
+function finish(){
+  var best = "S", max = -1;
+  ["S","F","G","H"].forEach(function(k){ if(score[k] > max){ max = score[k]; best = k; } });
+  var r = results[best];
+  document.getElementById('r-tag').textContent = r.tag;
+  document.getElementById('r-title').textContent = r.title;
+  document.getElementById('r-const').textContent = r.const;
+  document.getElementById('r-desc').textContent = r.desc;
+  document.getElementById('r-quote').textContent = r.quote;
+  document.getElementById('card').style.display = "none";
+  show('result');
+}
+
+function restart(){ show('cover'); }
+
+function makeCard(){
+  var cv = document.createElement('canvas'); cv.width = 600; cv.height = 800;
+  var x = cv.getContext('2d');
+  var g = x.createLinearGradient(0,0,0,800);
+  g.addColorStop(0,"#2b215c"); g.addColorStop(.55,"#4a3a9e"); g.addColorStop(1,"#6b57c9");
+  x.fillStyle = g; x.fillRect(0,0,600,800);
+  x.textAlign = "center"; x.fillStyle = "#ffd86b";
+  x.font = "600 26px sans-serif"; x.fillText("✦  隐藏星座能量  ✦", 300, 90);
+  x.fillStyle = "#fff"; x.font = "600 52px sans-serif";
+  x.fillText(document.getElementById('r-title').textContent.replace("你是「","").replace("」",""), 300, 200);
+  x.fillStyle = "#ffd86b"; x.font = "500 20px sans-serif";
+  x.fillText(document.getElementById('r-const').textContent, 300, 250);
+  x.fillStyle = "rgba(255,255,255,.92)"; x.font = "16px sans-serif";
+  wrapText(x, document.getElementById('r-desc').textContent, 300, 320, 480, 28);
+  x.fillStyle = "#ffd86b"; x.font = "600 22px sans-serif";
+  wrapText(x, document.getElementById('r-quote').textContent, 300, 600, 480, 32);
+  x.fillStyle = "rgba(255,255,255,.7)"; x.font = "14px sans-serif";
+  x.fillText("关注【时光里的星与心】回复「测试」随时再测", 300, 720);
+  x.fillText("扫码/搜索公众号：时光里的星与心", 300, 748);
+  var img = document.getElementById('card');
+  img.src = cv.toDataURL("image/png");
+  img.style.display = "block";
+  img.scrollIntoView({behavior:"smooth", block:"center"});
+}
+
+function wrapText(ctx, text, cx, y, maxW, lh){
+  var line = "", lines = [];
+  for(var n=0; n<text.length; n++){
+    var t = line + text[n];
+    if(ctx.measureText(t).width > maxW && line){ lines.push(line); line = text[n]; }
+    else line = t;
+  }
+  if(line) lines.push(line);
+  lines.forEach(function(l, k){ ctx.fillText(l, cx, y + k*lh); });
+}
+</script>
+</body>
+</html>
