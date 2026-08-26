@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>今日星座运势 · 时光里的星与心</title>
+<title>今日星座寄语 · 时光里的星与心</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   body {
@@ -57,7 +57,7 @@
 <body>
 <div id="app">
   <div class="stars">✦ ✧ ✦</div>
-  <h1>今日星座运势</h1>
+  <h1>今日星座寄语</h1>
   <div class="date" id="dateLabel"></div>
   <p class="sub">选你的星座，看看今天的能量走向。<br>每日自动焕新，愿你被星光照亮。</p>
 
@@ -74,11 +74,11 @@
     <div class="blk"><div class="t">💗 感情运</div><div class="v" id="v-love"></div></div>
     <div class="blk"><div class="t">🌿 今日小贴士</div><div class="v" id="v-tip"></div></div>
     <div class="lucky" id="lucky"></div>
-    <button class="btn" onclick="copyToday()">复制我的今日运势 📋</button>
+    <button class="btn" onclick="copyToday()">复制我的今日寄语 📋</button>
     <button class="btn ghost" onclick="document.getElementById('card').classList.remove('show')">收起</button>
   </div>
 
-  <p class="foot">关注【时光里的星与心】· 回复你的星座名看每日运势<br>运势为趣味心灵寄语，愿你今天被温柔以待。</p>
+  <p class="foot">关注【时光里的星与心】· 回复你的星座名看每日寄语<br>本页寄语仅为趣味心灵内容，愿你今天被温柔以待。</p>
 </div>
 
 <script>
@@ -154,7 +154,7 @@ function buildGrid(){
     d.onclick = function(){ showSign(idx, d); };
     g.appendChild(d);
   });
-  document.getElementById('dateLabel').textContent = chinaDate().label + ' · 每日运势';
+  document.getElementById('dateLabel').textContent = chinaDate().label + ' · 每日寄语';
 }
 
 var currentText = "";
@@ -166,14 +166,14 @@ function showSign(idx, el){
   var num = 1 + Math.floor(r()*9);
   var color = pick(COLORS,r), dir = pick(DIRS,r);
   document.getElementById('ce').textContent = s.e;
-  document.getElementById('cn').textContent = s.n + '座 · 今日运势';
+  document.getElementById('cn').textContent = s.n + '座 · 今日寄语';
   document.getElementById('cd').textContent = d.label;
   document.getElementById('v-overall').textContent = overall;
   document.getElementById('v-career').textContent = career;
   document.getElementById('v-love').textContent = love;
   document.getElementById('v-tip').textContent = tip;
   document.getElementById('lucky').textContent = '🍀 幸运数字 '+num+' ｜ 幸运色 '+color+' ｜ 贵人方位 '+dir;
-  currentText = '【'+s.n+'座 · 今日运势】'+d.label+'\n整体：'+overall+'\n事业：'+career+'\n感情：'+love+'\n贴士：'+tip+'\n幸运'+num+'｜'+color+'｜'+dir+'｜ 来自「时光里的星与心」';
+  currentText = '【'+s.n+'座 · 今日寄语】'+d.label+'\n整体：'+overall+'\n事业：'+career+'\n感情：'+love+'\n贴士：'+tip+'\n幸运'+num+'｜'+color+'｜'+dir+'｜ 来自「时光里的星与心」';
   var c = document.getElementById('card'); c.classList.add('show'); c.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
