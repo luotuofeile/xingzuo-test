@@ -62,7 +62,7 @@
     <h1>你的隐藏星座能量<br>是哪一种？</h1>
     <p class="sub">不考星座知识，只测你骨子里的能量类型。<br>8 个小问题，2 分钟，看懂真实的自己。</p>
     <button class="btn" onclick="start()">开始测试 ✨</button>
-    <p class="foot">关注【时光里的星与心】</p>
+    <p class="foot">关注【时光里的星与心】<br>回复「测试」随时再测</p>
   </section>
 
   <!-- 答题 -->
@@ -86,7 +86,7 @@
     <button class="btn" onclick="makeCard()">生成我的分享卡 📲</button>
     <button class="btn ghost" onclick="restart()">再测一次</button>
     <p class="tip">长按上方分享卡即可保存 / 转发给朋友</p>
-    <p class="foot">关注【时光里的星与心】<br>你的能量，值得被看见。</p>
+    <p class="foot">关注【时光里的星与心】回复「测试」随时再测<br>你的能量，值得被看见。</p>
   </section>
 
 </div>
@@ -212,7 +212,7 @@ function makeCard(){
   x.fillStyle = "#ffd86b"; x.font = "600 22px sans-serif";
   wrapText(x, document.getElementById('r-quote').textContent, 300, 600, 480, 32);
   x.fillStyle = "rgba(255,255,255,.7)"; x.font = "14px sans-serif";
-  x.fillText("关注【时光里的星与心】", 300, 720);
+  x.fillText("关注【时光里的星与心】回复「测试」随时再测", 300, 720);
   x.fillText("扫码/搜索公众号：时光里的星与心", 300, 748);
   var img = document.getElementById('card');
   img.src = cv.toDataURL("image/png");
