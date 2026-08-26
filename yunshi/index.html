@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>今日星座运势 · 时光里的星与心</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(160deg, #2b215c 0%, #4a3a9e 55%, #6b57c9 100%);
+    color: #fff; min-height: 100vh;
+    display: flex; justify-content: center; align-items: flex-start;
+  }
+  #app { width: 100%; max-width: 480px; padding: 24px 18px 40px; }
+  .stars { font-size: 26px; text-align: center; margin-bottom: 6px; letter-spacing: 6px; }
+  h1 { font-size: 22px; font-weight: 600; text-align: center; line-height: 1.4; margin-bottom: 6px; }
+  .date { text-align: center; font-size: 14px; opacity: .85; margin-bottom: 4px; }
+  .sub { text-align: center; font-size: 13px; opacity: .72; margin-bottom: 22px; line-height: 1.6; }
+
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .sign {
+    padding: 14px 6px; border-radius: 14px; text-align: center; cursor: pointer;
+    background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.16);
+    transition: all .15s;
+  }
+  .sign:active, .sign.on { background: rgba(255,216,107,.22); border-color: #ffd86b; }
+  .sign .e { font-size: 22px; }
+  .sign .n { font-size: 15px; font-weight: 500; margin-top: 2px; }
+
+  .card {
+    margin-top: 22px; background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.16); border-radius: 16px;
+    padding: 18px 16px; display: none;
+  }
+  .card.show { display: block; animation: fade .35s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: none;} }
+  .c-head { text-align:center; margin-bottom: 14px; }
+  .c-head .ce { font-size: 30px; }
+  .c-head .cn { font-size: 20px; font-weight: 600; }
+  .c-head .cd { font-size: 12px; opacity:.7; margin-top:2px; }
+  .blk { margin-bottom: 14px; }
+  .blk .t { font-size: 13px; color:#ffd86b; font-weight:600; margin-bottom:5px; }
+  .blk .v { font-size: 15px; line-height: 1.8; opacity: .95; }
+  .lucky { font-size: 14px; text-align:center; padding: 10px; border-radius: 12px;
+    background: rgba(255,216,107,.14); color:#ffd86b; margin-bottom: 14px; }
+  .btn {
+    display: block; width: 100%; padding: 13px; border: none; border-radius: 14px;
+    background: #ffd86b; color: #3a2a06; font-size: 15px; font-weight: 600;
+    cursor: pointer; margin-top: 6px; transition: transform .15s;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn.ghost { background: rgba(255,255,255,.14); color: #fff; }
+  .foot { text-align:center; font-size:12px; opacity:.6; margin-top:24px; line-height:1.7; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="stars">✦ ✧ ✦</div>
+  <h1>今日星座运势</h1>
+  <div class="date" id="dateLabel"></div>
+  <p class="sub">选你的星座，看看今天的能量走向。<br>每日自动焕新，愿你被星光照亮。</p>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="card" id="card">
+    <div class="c-head">
+      <div class="ce" id="ce"></div>
+      <div class="cn" id="cn"></div>
+      <div class="cd" id="cd"></div>
+    </div>
+    <div class="blk"><div class="t">✨ 整体运</div><div class="v" id="v-overall"></div></div>
+    <div class="blk"><div class="t">💼 事业运</div><div class="v" id="v-career"></div></div>
+    <div class="blk"><div class="t">💗 感情运</div><div class="v" id="v-love"></div></div>
+    <div class="blk"><div class="t">🌿 今日小贴士</div><div class="v" id="v-tip"></div></div>
+    <div class="lucky" id="lucky"></div>
+    <button class="btn" onclick="copyToday()">复制我的今日运势 📋</button>
+    <button class="btn ghost" onclick="document.getElementById('card').classList.remove('show')">收起</button>
+  </div>
+
+  <p class="foot">关注【时光里的星与心】· 回复你的星座名看每日运势<br>运势为趣味心灵寄语，愿你今天被温柔以待。</p>
+</div>
+
+<script>
+var SIGNS = [
+ {n:"白羊", e:"♈", overall:["今天你的冲劲像被点燃的火把，想做的事就别等。","白羊的直觉今天特别准，信它一次。","别被小事绊住，你今天的节奏该是往前冲。","一阵突如其来的热情，会帮你打开新局面。"],
+  career:["职场上主动揽活的人，今天更容易被看见。","遇到分歧，先听完再开口，赢面更大。","一个老项目有了收尾的契机，别放手。","你的执行力今天在线，难事也能推进。"],
+  love:["喜欢就说，别让傲娇替你错过信号。","伴侣闹别扭时，你先软一句就化解了。","单身的白羊，今天桃花藏在热闹场合。","别用脾气掩盖在意，那只会推远人。"],
+  tips:["今天适合把拖延的事一口气做完。","少刷手机多出门，运气在室外。","冲动消费前先等十分钟。","运动出汗能泄掉你的燥气。","对帮过你的人说句谢谢，福报回流。"]},
+ {n:"金牛", e:"♉", overall:["今天适合把生活收拾顺，安稳就是你的好运。","金牛的耐心今天会换来实在的回报。","别急着变，守住手里的更保险。","一顿好饭、一段好眠，能修复你大半疲惫。"],
+  career:["踏实交付的活，今天会被人记在心里。","涉及钱的决策，慢半拍更稳。","同事请教你时，顺手带一带。","别接超出能力的承诺，拒了不丢人。"],
+  love:["用行动代替承诺，TA 更吃这一套。","今晚适合一起做饭或散步，平淡最甜。","单身的金牛，熟人圈里藏着好感。","别拿冷战当筹码，先破冰的是你。"],
+  tips:["今天记账，看清钱去哪了。","给家里添个小物件，心情会变好。","少比较，别人的节奏不是你的。","泡个热水澡，卸下肩颈的紧。","把一句想说没说的话，今天说了。"]},
+ {n:"双子", e:"♊", overall:["今天脑子转得飞快，适合处理信息和社交。","双子的好奇心带你撞见新鲜事。","别同时开太多头，挑一件深耕。","一场对话可能改变你今天的走向。"],
+  career:["需要沟通协调的活，今天你最顺手。","新点子别烂在脑子里，写下来。","会议里多听少辩，信息差就是机会。","别在邮件里开玩笑过度，分寸感在线。"],
+  love:["聊得来比长得帅更重要，今天尤其如此。","别同时撩好几头，容易翻车。","伴侣需要你专心陪，手机先放下。","单身双子，兴趣群里易遇同频的人。"],
+  tips:["今天学个新词或小技能，很划算。","信息太多就关掉几个群。","别答应自己记不住的约。","写三句话日记，理清乱糟糟。","给朋友发条随手想到的消息。"]},
+ {n:"巨蟹", e:"♋", overall:["今天你的柔软是一种力量，别藏起来。","巨蟹的直觉关于人，今天特别灵。","给在乎的人一点时间，关系会回温。","累了就回自己壳里待会儿，没关系。"],
+  career:["团队协作里你最懂照顾人，价值被看见。","别把情绪带进汇报，理性更得分。","帮新人的一个小忙，日后有人撑你。","今天适合梳理人际，而非冲业绩。"],
+  love:["一句「我在」比一百句情话管用。","家人或伴侣的小情绪，你接得住。","单身巨蟹，旧识可能重新靠近。","别用付出绑架对方，爱要松一点。"],
+  tips:["今天给家里打个电话或视频。","煮一锅汤，治愈自己。","少熬夜，蟹子的情绪靠睡眠。","把感恩写下来，心会更稳。","对委屈你的人，温柔地划界。"]},
+ {n:"狮子", e:"♌", overall:["今天你自带光，站在前面也没在怕的。","狮子的底气，今天该拿出来用。","被看见不是虚荣，是你应得的舞台。","一场主动表达，能翻转别人的印象。"],
+  career:["提案、亮相、争取，今天都该你上。","别替别人扛所有，留点空间给自己。","你的热情能带起整个团队的气。","被质疑时，用结果说话最体面。"],
+  love:["大方一点，喜欢就明示，别端着。","伴侣需要被你看见，夸一句就够了。","单身狮子，聚光灯下易遇欣赏你的人。","别用强势盖过温柔，两者你都有。"],
+  tips:["今天穿件让你自信的衣服。","主动夸一个身边人，气场更亮。","别为面子硬撑，该求助就求助。","晒晒太阳，补充你的能量。","把目标写墙上，天天看见。"]},
+ {n:"处女", e:"♍", overall:["今天适合把混乱理成秩序，你最擅长。","处女的清醒帮你避开一个坑。","别追求完美到不敢开始，先做完。","清单列一列，心就静了一半。"],
+  career:["细节里的差错，今天只有你能看见并补上。","交差前自检一遍，口碑就是这样攒的。","别替同事擦屁股到委屈自己。","流程优化的事，今天提正合适。"],
+  love:["别用挑剔表达爱，那会伤人也伤己。","对方要的是被接纳，不是被改造。","单身处女，踏实靠谱的人更吸引你。","把「我帮你」换成「我们一起」。"],
+  tips:["今天大扫除一个角落，神清气爽。","列三件必做，做完就奖励自己。","别反复检查同一条消息。","深呼吸五次，松掉紧绷。","给完美主义放个假。"]},
+ {n:"天秤", e:"♎", overall:["今天你天然知道怎么让人舒服，善用。","天秤的审美今天能救一个尴尬场。","别在两端反复横跳，选了就安心。","一次温和的协调，化解一场暗涌。"],
+  career:["两边都不得罪的事，今天只有你能办。","合作项目里你是指针，别含糊。","别为了和谐吞下不合理要求。","presentation 今天你最拿分。"],
+  love:["平等对话比浪漫套路更打动 TA。","别在关系里算太精，真心更贵。","单身天秤，气质同频的人会被你吸引。","有分歧就摊开说，别冷战。"],
+  tips:["今天整理下社交，留白也重要。","挑一件喜欢的事，认真享受。","别替别人做决定，只给建议。","听首完整的歌，平衡情绪。","给房间换个摆设，换心情。"]},
+ {n:"天蝎", e:"♏", overall:["今天你的洞察力像刀，看人一眼见骨。","天蝎的专注，今天能啃下硬骨头。","别把猜疑当情报，先确认再动。","一段深聊，胜过十场寒暄。"],
+  career:["复杂局里你最清醒，关键的棋你来下。","别把所有牌亮完，留一手更稳。","对手的破绽，今天你看得到。","长期布局的事，今天有进展。"],
+  love:["别用试探代替信任，爱经不起猜。","你的占有欲要化成陪伴，而非控制。","单身天蝎，神秘感是你的饵。","一句坦诚，比十句试探管用。"],
+  tips:["今天独处一小时，回血。","别翻旧账，过去就让它过去。","运动到出汗，泄掉执念。","写封不寄出的信，理清心事。","对值得的人，给足信任。"]},
+ {n:"射手", e:"♐", overall:["今天你的脚步想往远处去，安排点新鲜。","射手的乐观是会传染的，带旺身边人。","别被条条框框困住，今天该放飞。","一个说走就走的念头，别有负罪感。"],
+  career:["需要创意和野心的活，今天你主场。","别在细枝末节磨，抓大方向。","远方的机会，今天传来信号。","你的热情能拉来贵人。"],
+  love:["别用自由当逃避亲密的借口。","带 TA 去看点不一样的，关系活起来。","单身射手，路上、途中易遇有趣的人。","诚实地说想独处，比冷处理体面。"],
+  tips:["今天去个没去过的地方。","学一句外语或冷知识。","别答应束缚自己的约。","大笑一场，运气跟着松。","给远方的人发个问候。"]},
+ {n:"摩羯", e:"♑", overall:["今天你的稳，是乱局里最稀缺的东西。","摩羯的坚持，正在悄悄长出结果。","别急着要反馈，时间站在你这边。","把大目标拆小，今天就能动一步。"],
+  career:["踏实的人今天被委以重任，接住。","别抢风头，功劳自己会说话。","一个卡久的项目，今天有突破口。","你的靠谱，是团队的安全感。"],
+  love:["别用忙当回避感情的挡箭牌。","稳定陪伴比惊天动地更动人。","单身摩羯，务实靠谱的人走近你。","把「我在忙」换成「我想你」。"],
+  tips:["今天列周计划，掌控感回来。","给自己设个下班线，别熬。","夸夸努力的自己，别只盯结果。","存一笔小钱，安心感 up。","爬段楼梯，清醒头脑。"]},
+ {n:"水瓶", e:"♒", overall:["今天你的脑洞和别人不在一个频道，正好。","水瓶的独特，今天是被需要的答案。","别为了合群改自己，你本就特别。","一个反常的念头，可能是突破口。"],
+  career:["老方法卡住时，你的新招派上用场。","别被流程绑架，优化它。","跨圈的信息，今天给你优势。","你提的冷点子，有人默默点赞。"],
+  love:["别用理性隔绝亲密，偶尔示弱。","给对方自由，关系反而更牢。","单身水瓶，同好圈里遇灵魂共鸣。","别用「朋友」定义暧昧，想清再说。"],
+  tips:["今天尝试一件没做过的小事。","关掉算法推荐，自己找点料。","和想法不同的人聊五分钟。","给未来写句疯话，激活脑。","独处充电，别愧疚。"]},
+ {n:"双鱼", e:"♓", overall:["今天你的共情力是礼物，也别透支。","双鱼的想象力，今天能化成灵感。","别把别人的情绪全背身上，放下些。","一首歌、一场梦，会给你答案。"],
+  career:["需要创意和温度的事，今天你拿手。","别答应超出心力的活，保重自己。","你的细腻，补上了别人忽略的缝隙。","灵感来了马上记，别信记忆力。"],
+  love:["你的温柔很贵，给懂的人。","别用牺牲换被爱，那会失衡。","单身双鱼，暧昧的氛围里易动心。","把「我没事」换成真实感受。"],
+  tips:["今天做件纯粹的喜欢的事。","少看负面新闻，护住情绪。","给水培或绿植浇个水。","写几句诗或乱想，释放。","允许自己今天柔软一点。"]}
+];
+var COLORS = ["蜜橘色","雾蓝","暖白","墨绿","焦糖棕","浅紫","宝蓝","米金"];
+var DIRS = ["正东","东南","正南","西南","正西","西北","正北","东北"];
+
+function chinaDate(){
+  var f = new Intl.DateTimeFormat('zh-CN',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',weekday:'long'});
+  var p = f.formatToParts(new Date()), o={};
+  p.forEach(function(x){ o[x.type]=x.value; });
+  return { key:o.year+'-'+o.month+'-'+o.day, label:o.year+'年'+o.month+'月'+o.day+'日 '+o.weekday };
+}
+function seedFrom(str){ var h=2166136261; for(var i=0;i<str.length;i++){ h^=str.charCodeAt(i); h=Math.imul(h,16777619);} return h>>>0; }
+function rngFor(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; var t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+function pick(arr,r){ return arr[Math.floor(r()*arr.length)]; }
+
+function buildGrid(){
+  var g = document.getElementById('grid');
+  SIGNS.forEach(function(s, idx){
+    var d = document.createElement('div');
+    d.className = 'sign';
+    d.innerHTML = '<div class="e">'+s.e+'</div><div class="n">'+s.n+'</div>';
+    d.onclick = function(){ showSign(idx, d); };
+    g.appendChild(d);
+  });
+  document.getElementById('dateLabel').textContent = chinaDate().label + ' · 每日运势';
+}
+
+var currentText = "";
+function showSign(idx, el){
+  document.querySelectorAll('.sign').forEach(function(x){ x.classList.remove('on'); });
+  el.classList.add('on');
+  var d = chinaDate(), s = SIGNS[idx], r = rngFor(seedFrom(d.key + s.n));
+  var overall = pick(s.overall,r), career = pick(s.career,r), love = pick(s.love,r), tip = pick(s.tips,r);
+  var num = 1 + Math.floor(r()*9);
+  var color = pick(COLORS,r), dir = pick(DIRS,r);
+  document.getElementById('ce').textContent = s.e;
+  document.getElementById('cn').textContent = s.n + '座 · 今日运势';
+  document.getElementById('cd').textContent = d.label;
+  document.getElementById('v-overall').textContent = overall;
+  document.getElementById('v-career').textContent = career;
+  document.getElementById('v-love').textContent = love;
+  document.getElementById('v-tip').textContent = tip;
+  document.getElementById('lucky').textContent = '🍀 幸运数字 '+num+' ｜ 幸运色 '+color+' ｜ 贵人方位 '+dir;
+  currentText = '【'+s.n+'座 · 今日运势】'+d.label+'\n整体：'+overall+'\n事业：'+career+'\n感情：'+love+'\n贴士：'+tip+'\n幸运'+num+'｜'+color+'｜'+dir+'｜ 来自「时光里的星与心」';
+  var c = document.getElementById('card'); c.classList.add('show'); c.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function copyToday(){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(currentText).then(function(){ alert('已复制，去粘贴给朋友吧 ✨'); });
+  } else {
+    var ta=document.createElement('textarea'); ta.value=currentText; document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); alert('已复制 ✨'); }catch(e){ alert('复制失败，请手动长按选择'); } document.body.removeChild(ta);
+  }
+}
+
+buildGrid();
+</script>
+</body>
+</html>
