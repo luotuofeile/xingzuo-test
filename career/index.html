@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>你的事业天赋星图是哪一张？</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(160deg, #5a3a12 0%, #a06a1e 55%, #e0a23c 100%);
+    color: #fff; min-height: 100vh;
+    display: flex; justify-content: center; align-items: flex-start;
+  }
+  #app { width: 100%; max-width: 480px; padding: 24px 20px 40px; }
+  .screen { display: none; }
+  .screen.active { display: block; animation: fade .35s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: none;} }
+  .stars { font-size: 28px; text-align: center; margin-bottom: 8px; letter-spacing: 6px; }
+  h1 { font-size: 24px; font-weight: 600; text-align: center; line-height: 1.4; margin-bottom: 14px; }
+  .sub { text-align: center; font-size: 14px; opacity: .82; line-height: 1.7; margin-bottom: 28px; }
+  .btn {
+    display: block; width: 100%; padding: 15px; border: none; border-radius: 14px;
+    background: #ffe0a0; color: #2a1a06; font-size: 16px; font-weight: 600;
+    cursor: pointer; margin-top: 10px; transition: transform .15s;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn.ghost { background: rgba(255,255,255,.14); color: #fff; }
+  .progress { height: 6px; background: rgba(255,255,255,.18); border-radius: 99px; margin-bottom: 18px; overflow: hidden; }
+  .progress > i { display: block; height: 100%; background: #ffe0a0; width: 0; transition: width .3s; }
+  .qcount { font-size: 13px; opacity: .8; margin-bottom: 8px; }
+  .qtext { font-size: 18px; font-weight: 500; line-height: 1.6; margin-bottom: 18px; }
+  .opt {
+    display: block; width: 100%; text-align: left; padding: 15px 16px; margin-bottom: 12px;
+    background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.18);
+    border-radius: 14px; color: #fff; font-size: 15px; line-height: 1.5; cursor: pointer;
+    transition: all .15s;
+  }
+  .opt:active { background: rgba(255,255,255,.22); border-color: #ffe0a0; }
+  .result-tag { display:inline-block; padding:4px 12px; border-radius:99px; background:rgba(255,255,255,.2); color:#ffe0a0; font-size:13px; margin-bottom:12px; }
+  .result-title { font-size: 26px; font-weight: 600; margin-bottom: 6px; }
+  .result-const { font-size: 14px; opacity: .85; margin-bottom: 16px; }
+  .result-desc { font-size: 15px; line-height: 1.85; opacity: .94; margin-bottom: 16px;
+    background: rgba(255,255,255,.08); padding: 16px; border-radius: 14px; }
+  .result-quote { font-size: 15px; text-align: center; color: #ffe0a0; font-weight: 500;
+    padding: 14px; border-top: 1px dashed rgba(255,255,255,.3); border-bottom: 1px dashed rgba(255,255,255,.3); margin-bottom: 20px; line-height:1.6; }
+  .sharecard { width: 100%; border-radius: 14px; margin-bottom: 14px; display: none; }
+  .tip { text-align: center; font-size: 12px; opacity: .7; margin-top: 10px; line-height: 1.6; }
+  .foot { text-align:center; font-size:12px; opacity:.6; margin-top:22px; line-height:1.7; }
+</style>
+</head>
+<body>
+<div id="app">
+  <section id="cover" class="screen active">
+    <div class="stars">✦ ✧ ✦</div>
+    <h1>你的事业天赋星图<br>是哪一张？</h1>
+    <p class="sub">不考简历，只测你骨子里的职场能量。<br>8 个小问题，2 分钟，看清你最被低估的天赋。</p>
+    <button class="btn" onclick="start()">开始测试 ✨</button>
+    <p class="foot">关注【时光里的星与心】<br>回复「测试」随时再测</p>
+  </section>
+  <section id="quiz" class="screen">
+    <div class="progress"><i id="bar"></i></div>
+    <div class="qcount" id="qcount"></div>
+    <div class="qtext" id="qtext"></div>
+    <div id="opts"></div>
+  </section>
+  <section id="result" class="screen">
+    <div style="text-align:center">
+      <span class="result-tag" id="r-tag"></span>
+      <div class="result-title" id="r-title"></div>
+      <div class="result-const" id="r-const"></div>
+    </div>
+    <div class="result-desc" id="r-desc"></div>
+    <div class="result-quote" id="r-quote"></div>
+    <img class="sharecard" id="card" alt="分享卡">
+    <button class="btn" onclick="makeCard()">生成我的分享卡 📲</button>
+    <button class="btn ghost" onclick="restart()">再测一次</button>
+    <p class="tip">长按上方分享卡即可保存 / 转发给朋友</p>
+    <p class="foot">关注【时光里的星与心】回复「测试」随时再测<br>你的天赋，值得被看见。</p>
+  </section>
+</div>
+<script>
+var questions = [{"q": "接新项目你第一反应？", "o": [{"t": "冲上去试试", "d": "A"}, {"t": "先把基础打牢", "d": "B"}, {"t": "找人组队一起", "d": "C"}, {"t": "想清楚再出手", "d": "D"}]}, {"q": "你最享受的工作状态？", "o": [{"t": "开荒、从 0 到 1", "d": "A"}, {"t": "把一件事做到极致", "d": "B"}, {"t": "和人协作碰撞", "d": "C"}, {"t": "从框架到细节都自己控", "d": "D"}]}, {"q": "同事怎么形容你？", "o": [{"t": "敢闯", "d": "A"}, {"t": "靠谱", "d": "B"}, {"t": "会来事", "d": "C"}, {"t": "有想法", "d": "D"}]}, {"q": "你最怕的工作？", "o": [{"t": "重复没变化", "d": "A"}, {"t": "浮于表面不落地", "d": "B"}, {"t": "单打独斗没团队", "d": "C"}, {"t": "杂乱没章法", "d": "D"}]}, {"q": "你的优势在？", "o": [{"t": "嗅觉和冲劲", "d": "A"}, {"t": "耐心和执行", "d": "B"}, {"t": "沟通和统筹", "d": "C"}, {"t": "审美和体系", "d": "D"}]}, {"q": "升职你更想？", "o": [{"t": "去新业务线", "d": "A"}, {"t": "把本职做成专家", "d": "B"}, {"t": "带团队", "d": "C"}, {"t": "主导一个产品", "d": "D"}]}, {"q": "做事风格？", "o": [{"t": "先行动再修正", "d": "A"}, {"t": "准备充分才动", "d": "B"}, {"t": "边聊边推进", "d": "C"}, {"t": "先搭框架", "d": "D"}]}, {"q": "用一词形容你的职场力？", "o": [{"t": "开拓", "d": "A"}, {"t": "深耕", "d": "B"}, {"t": "联结", "d": "C"}, {"t": "缔造", "d": "D"}]}];
+var results = {"A": {"tag": "开拓者", "title": "你是「开拓者」", "const": "天赋：嗅觉 + 冲劲", "desc": "你天然对机会敏感，别人还在犹豫，你已经迈出第一步。你不惧从 0 到 1 的荒原，反而享受开荒的爽感。把你的冲劲配上一个能落地的搭档，就是王炸。", "quote": "你最擅长的事，是把空白变成可能。"}, "B": {"tag": "深耕者", "title": "你是「深耕者」", "const": "天赋：耐心 + 执行", "desc": "你信慢就是快。一件事交给你，你能磨到极致、落到地上。你不追风口，却总在时间里把结果挣回来。你的靠谱，是团队最硬的底层。", "quote": "你默默扎根的样子，时间都看得到。"}, "C": {"tag": "联结者", "title": "你是「联结者」", "const": "天赋：沟通 + 统筹", "desc": "你是团队里的黏合剂。你懂人性、会协调，能把不对付的人拧成一股绳。很多事不是你亲手做，却因你而成了。", "quote": "你最厉害的，是让对的人遇上对的事。"}, "D": {"tag": "缔造者", "title": "你是「缔造者」", "const": "天赋：审美 + 体系", "desc": "你既看得到蓝图，也抠得下细节。你不满足做零件，想亲手把一个东西从骨架搭到成型。给你舞台，你能造出有你印记的作品。", "quote": "你想要的，是从无到有的那一整个作品。"}};
+var i = 0, score = {A:0,B:0,C:0,D:0};
+function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
+function start(){ i=0; score={A:0,B:0,C:0,D:0}; render(); show('quiz'); }
+function render(){
+  var q = questions[i];
+  document.getElementById('qcount').textContent = "第 " + (i+1) + " / " + questions.length + " 题";
+  document.getElementById('bar').style.width = ((i)/questions.length*100) + "%";
+  document.getElementById('qtext').textContent = q.q;
+  var box = document.getElementById('opts'); box.innerHTML = "";
+  q.o.forEach(function(op){
+    var b = document.createElement('button');
+    b.className = "opt"; b.textContent = op.t;
+    b.onclick = function(){ choose(op.d); };
+    box.appendChild(b);
+  });
+}
+function choose(d){ score[d]++; i++;
+  if(i < questions.length){ render(); }
+  else { document.getElementById('bar').style.width = "100%"; finish(); }
+}
+function finish(){
+  var best = "A", max = -1;
+  ["A","B","C","D"].forEach(function(k){ if(score[k] > max){ max = score[k]; best = k; } });
+  var r = results[best];
+  document.getElementById('r-tag').textContent = r.tag;
+  document.getElementById('r-title').textContent = r.title;
+  document.getElementById('r-const').textContent = r.const;
+  document.getElementById('r-desc').textContent = r.desc;
+  document.getElementById('r-quote').textContent = r.quote;
+  document.getElementById('card').style.display = "none";
+  show('result');
+}
+function restart(){ show('cover'); }
+function makeCard(){
+  var cv = document.createElement('canvas'); cv.width = 600; cv.height = 800;
+  var x = cv.getContext('2d');
+  var g = x.createLinearGradient(0,0,0,800);
+  g.addColorStop(0,"#5a3a12"); g.addColorStop(.55,"#a06a1e"); g.addColorStop(1,"#e0a23c");
+  x.fillStyle = g; x.fillRect(0,0,600,800);
+  x.textAlign = "center"; x.fillStyle = "#ffe0a0";
+  x.font = "600 26px sans-serif"; x.fillText("✦  事业天赋测试  ✦", 300, 90);
+  x.fillStyle = "#fff"; x.font = "600 52px sans-serif";
+  x.fillText(document.getElementById('r-title').textContent.replace("你是「","").replace("」",""), 300, 200);
+  x.fillStyle = "#ffe0a0"; x.font = "500 20px sans-serif";
+  x.fillText(document.getElementById('r-const').textContent, 300, 250);
+  x.fillStyle = "rgba(255,255,255,.92)"; x.font = "16px sans-serif";
+  wrapText(x, document.getElementById('r-desc').textContent, 300, 320, 480, 28);
+  x.fillStyle = "#ffe0a0"; x.font = "600 22px sans-serif";
+  wrapText(x, document.getElementById('r-quote').textContent, 300, 600, 480, 32);
+  x.fillStyle = "rgba(255,255,255,.7)"; x.font = "14px sans-serif";
+  x.fillText("关注【时光里的星与心】回复「测试」随时再测", 300, 720);
+  x.fillText("扫码/搜索公众号：时光里的星与心", 300, 748);
+  var img = document.getElementById('card');
+  img.src = cv.toDataURL("image/png");
+  img.style.display = "block";
+  img.scrollIntoView({behavior:"smooth", block:"center"});
+}
+function wrapText(ctx, text, cx, y, maxW, lh){
+  var line = "", lines = [];
+  for(var n=0; n<text.length; n++){
+    var t = line + text[n];
+    if(ctx.measureText(t).width > maxW && line){ lines.push(line); line = text[n]; }
+    else line = t;
+  }
+  if(line) lines.push(line);
+  lines.forEach(function(l, k){ ctx.fillText(l, cx, y + k*lh); });
+}
+</script>
+</body>
+</html>

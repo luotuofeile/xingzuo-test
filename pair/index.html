@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>你和哪个星座最有缘分？</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(160deg, #5b2a4a 0%, #9c3f7a 55%, #c95b9e 100%);
+    color: #fff; min-height: 100vh;
+    display: flex; justify-content: center; align-items: flex-start;
+  }
+  #app { width: 100%; max-width: 480px; padding: 24px 20px 40px; }
+  .screen { display: none; }
+  .screen.active { display: block; animation: fade .35s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: none;} }
+  .stars { font-size: 28px; text-align: center; margin-bottom: 8px; letter-spacing: 6px; }
+  h1 { font-size: 24px; font-weight: 600; text-align: center; line-height: 1.4; margin-bottom: 14px; }
+  .sub { text-align: center; font-size: 14px; opacity: .82; line-height: 1.7; margin-bottom: 28px; }
+  .btn {
+    display: block; width: 100%; padding: 15px; border: none; border-radius: 14px;
+    background: #ffd0e6; color: #2a1a06; font-size: 16px; font-weight: 600;
+    cursor: pointer; margin-top: 10px; transition: transform .15s;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn.ghost { background: rgba(255,255,255,.14); color: #fff; }
+  .progress { height: 6px; background: rgba(255,255,255,.18); border-radius: 99px; margin-bottom: 18px; overflow: hidden; }
+  .progress > i { display: block; height: 100%; background: #ffd0e6; width: 0; transition: width .3s; }
+  .qcount { font-size: 13px; opacity: .8; margin-bottom: 8px; }
+  .qtext { font-size: 18px; font-weight: 500; line-height: 1.6; margin-bottom: 18px; }
+  .opt {
+    display: block; width: 100%; text-align: left; padding: 15px 16px; margin-bottom: 12px;
+    background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.18);
+    border-radius: 14px; color: #fff; font-size: 15px; line-height: 1.5; cursor: pointer;
+    transition: all .15s;
+  }
+  .opt:active { background: rgba(255,255,255,.22); border-color: #ffd0e6; }
+  .result-tag { display:inline-block; padding:4px 12px; border-radius:99px; background:rgba(255,255,255,.2); color:#ffd0e6; font-size:13px; margin-bottom:12px; }
+  .result-title { font-size: 26px; font-weight: 600; margin-bottom: 6px; }
+  .result-const { font-size: 14px; opacity: .85; margin-bottom: 16px; }
+  .result-desc { font-size: 15px; line-height: 1.85; opacity: .94; margin-bottom: 16px;
+    background: rgba(255,255,255,.08); padding: 16px; border-radius: 14px; }
+  .result-quote { font-size: 15px; text-align: center; color: #ffd0e6; font-weight: 500;
+    padding: 14px; border-top: 1px dashed rgba(255,255,255,.3); border-bottom: 1px dashed rgba(255,255,255,.3); margin-bottom: 20px; line-height:1.6; }
+  .sharecard { width: 100%; border-radius: 14px; margin-bottom: 14px; display: none; }
+  .tip { text-align: center; font-size: 12px; opacity: .7; margin-top: 10px; line-height: 1.6; }
+  .foot { text-align:center; font-size:12px; opacity:.6; margin-top:22px; line-height:1.7; }
+</style>
+</head>
+<body>
+<div id="app">
+  <section id="cover" class="screen active">
+    <div class="stars">✦ ✧ ✦</div>
+    <h1>你和哪个星座<br>最有缘分？</h1>
+    <p class="sub">不考星座知识，只测你骨子里的吸引力类型。<br>8 个小问题，2 分钟，看清你最合拍的那类人。</p>
+    <button class="btn" onclick="start()">开始测试 ✨</button>
+    <p class="foot">关注【时光里的星与心】<br>回复「测试」随时再测</p>
+  </section>
+  <section id="quiz" class="screen">
+    <div class="progress"><i id="bar"></i></div>
+    <div class="qcount" id="qcount"></div>
+    <div class="qtext" id="qtext"></div>
+    <div id="opts"></div>
+  </section>
+  <section id="result" class="screen">
+    <div style="text-align:center">
+      <span class="result-tag" id="r-tag"></span>
+      <div class="result-title" id="r-title"></div>
+      <div class="result-const" id="r-const"></div>
+    </div>
+    <div class="result-desc" id="r-desc"></div>
+    <div class="result-quote" id="r-quote"></div>
+    <img class="sharecard" id="card" alt="分享卡">
+    <button class="btn" onclick="makeCard()">生成我的分享卡 📲</button>
+    <button class="btn ghost" onclick="restart()">再测一次</button>
+    <p class="tip">长按上方分享卡即可保存 / 转发给朋友</p>
+    <p class="foot">关注【时光里的星与心】回复「测试」随时再测<br>对的人，值得被遇见。</p>
+  </section>
+</div>
+<script>
+var questions = [{"q": "你最被哪种人吸引？", "o": [{"t": "敢爱敢恨、说干就干的", "d": "A"}, {"t": "踏实靠谱、说话算数的", "d": "B"}, {"t": "脑洞大、聊不完的", "d": "C"}, {"t": "敏感温柔、懂你情绪的", "d": "D"}]}, {"q": "吵架后你通常？", "o": [{"t": "当场吵完就翻篇", "d": "A"}, {"t": "先冷静，再讲道理", "d": "B"}, {"t": "吐槽完就当没发生", "d": "C"}, {"t": "闷在心里，但记很久", "d": "D"}]}, {"q": "理想周末约会？", "o": [{"t": "一起去冒险 / 运动", "d": "A"}, {"t": "在家做饭、安稳相处", "d": "B"}, {"t": "看展 / 逛市集 / 认识新朋友", "d": "C"}, {"t": "深夜长谈、互相交心", "d": "D"}]}, {"q": "对方怎么做最让你安心？", "o": [{"t": "直接表达喜欢，不猜", "d": "A"}, {"t": "默默把你照顾周到", "d": "B"}, {"t": "跟你分享新鲜事和想法", "d": "C"}, {"t": "记得你的小情绪", "d": "D"}]}, {"q": "你给恋人的关键词？", "o": [{"t": "热烈", "d": "A"}, {"t": "可靠", "d": "B"}, {"t": "有趣", "d": "C"}, {"t": "懂我", "d": "D"}]}, {"q": "感情里你最怕？", "o": [{"t": "被冷落、被忽视", "d": "A"}, {"t": "不稳、没保障", "d": "B"}, {"t": "被绑死、没自由", "d": "C"}, {"t": "冷漠、不沟通", "d": "D"}]}, {"q": "你表达爱的方式？", "o": [{"t": "行动直接、大方示爱", "d": "A"}, {"t": "用行动和承担", "d": "B"}, {"t": "逗你开心、一起玩", "d": "C"}, {"t": "细腻陪伴、共情", "d": "D"}]}, {"q": "用一种元素形容你的爱？", "o": [{"t": "火", "d": "A"}, {"t": "大地", "d": "B"}, {"t": "风", "d": "C"}, {"t": "水", "d": "D"}]}];
+var results = {"A": {"tag": "火象缘份", "title": "你是「火象缘份」", "const": "最合：白羊 / 狮子 / 射手", "desc": "你爱得直接又热烈，最吃不消暧昧拉扯。你需要一个也敢爱敢恨、能和你并肩往前冲的人。和火象在一起，日子永远有劲、不无聊。", "quote": "你要的爱，是明目张胆、不含糊的。"}, "B": {"tag": "土象安稳", "title": "你是「土象安稳」", "const": "最合：金牛 / 处女 / 摩羯", "desc": "你向往的稳定，不是 boring，是「有人在」的踏实。你不需要天天惊喜，但要信得过、靠得住。土象给你的，是能把日子过踏实的那份安心。", "quote": "你要的浪漫，是落在日子里的靠谱。"}, "C": {"tag": "风象同频", "title": "你是「风象同频」", "const": "最合：双子 / 天秤 / 水瓶", "desc": "你先被脑子吸引，再被心打动。你需要一个能接住你奇思妙想、也给你自由的人。和风象在一起，是聊不完的天、玩不尽的新鲜。", "quote": "你要的爱，是灵魂同频、各自自由。"}, "D": {"tag": "水象深情", "title": "你是「水象深情」", "const": "最合：巨蟹 / 天蝎 / 双鱼", "desc": "你爱得深，也敏感。你渴望被懂，而不是被道理说服。和水象在一起，是情绪被接住、心事有人接盘的温柔。", "quote": "你要的爱，是被读懂、被温柔以待。"}};
+var i = 0, score = {A:0,B:0,C:0,D:0};
+function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
+function start(){ i=0; score={A:0,B:0,C:0,D:0}; render(); show('quiz'); }
+function render(){
+  var q = questions[i];
+  document.getElementById('qcount').textContent = "第 " + (i+1) + " / " + questions.length + " 题";
+  document.getElementById('bar').style.width = ((i)/questions.length*100) + "%";
+  document.getElementById('qtext').textContent = q.q;
+  var box = document.getElementById('opts'); box.innerHTML = "";
+  q.o.forEach(function(op){
+    var b = document.createElement('button');
+    b.className = "opt"; b.textContent = op.t;
+    b.onclick = function(){ choose(op.d); };
+    box.appendChild(b);
+  });
+}
+function choose(d){ score[d]++; i++;
+  if(i < questions.length){ render(); }
+  else { document.getElementById('bar').style.width = "100%"; finish(); }
+}
+function finish(){
+  var best = "A", max = -1;
+  ["A","B","C","D"].forEach(function(k){ if(score[k] > max){ max = score[k]; best = k; } });
+  var r = results[best];
+  document.getElementById('r-tag').textContent = r.tag;
+  document.getElementById('r-title').textContent = r.title;
+  document.getElementById('r-const').textContent = r.const;
+  document.getElementById('r-desc').textContent = r.desc;
+  document.getElementById('r-quote').textContent = r.quote;
+  document.getElementById('card').style.display = "none";
+  show('result');
+}
+function restart(){ show('cover'); }
+function makeCard(){
+  var cv = document.createElement('canvas'); cv.width = 600; cv.height = 800;
+  var x = cv.getContext('2d');
+  var g = x.createLinearGradient(0,0,0,800);
+  g.addColorStop(0,"#5b2a4a"); g.addColorStop(.55,"#9c3f7a"); g.addColorStop(1,"#c95b9e");
+  x.fillStyle = g; x.fillRect(0,0,600,800);
+  x.textAlign = "center"; x.fillStyle = "#ffd0e6";
+  x.font = "600 26px sans-serif"; x.fillText("✦  星座缘分测试  ✦", 300, 90);
+  x.fillStyle = "#fff"; x.font = "600 52px sans-serif";
+  x.fillText(document.getElementById('r-title').textContent.replace("你是「","").replace("」",""), 300, 200);
+  x.fillStyle = "#ffd0e6"; x.font = "500 20px sans-serif";
+  x.fillText(document.getElementById('r-const').textContent, 300, 250);
+  x.fillStyle = "rgba(255,255,255,.92)"; x.font = "16px sans-serif";
+  wrapText(x, document.getElementById('r-desc').textContent, 300, 320, 480, 28);
+  x.fillStyle = "#ffd0e6"; x.font = "600 22px sans-serif";
+  wrapText(x, document.getElementById('r-quote').textContent, 300, 600, 480, 32);
+  x.fillStyle = "rgba(255,255,255,.7)"; x.font = "14px sans-serif";
+  x.fillText("关注【时光里的星与心】回复「测试」随时再测", 300, 720);
+  x.fillText("扫码/搜索公众号：时光里的星与心", 300, 748);
+  var img = document.getElementById('card');
+  img.src = cv.toDataURL("image/png");
+  img.style.display = "block";
+  img.scrollIntoView({behavior:"smooth", block:"center"});
+}
+function wrapText(ctx, text, cx, y, maxW, lh){
+  var line = "", lines = [];
+  for(var n=0; n<text.length; n++){
+    var t = line + text[n];
+    if(ctx.measureText(t).width > maxW && line){ lines.push(line); line = text[n]; }
+    else line = t;
+  }
+  if(line) lines.push(line);
+  lines.forEach(function(l, k){ ctx.fillText(l, cx, y + k*lh); });
+}
+</script>
+</body>
+</html>
