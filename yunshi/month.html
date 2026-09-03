@@ -7,12 +7,14 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#f7f5f0;color:#333;line-height:1.8;padding-bottom:66px;}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#f7f5f0;color:#333;line-height:1.8;}
 .wrap{max-width:720px;margin:0 auto;padding:16px;}
 header{text-align:center;padding:32px 16px 20px;background:linear-gradient(135deg,#3a2e6e,#6b4fa0);color:#fff;border-radius:0 0 18px 18px;}
 header h1{font-size:22px;letter-spacing:1px;}
 header p{font-size:13px;opacity:.85;margin-top:6px;}
-nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:20px 0 8px;position:sticky;top:0;background:#f7f5f0;padding:8px 0;z-index:10;}
+nav{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:20px 0 8px;position:sticky;top:0;background:#f7f5f0;padding:8px 0;z-index:10;}
+nav .znav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;flex:1 1 auto;}
+.follow-pill{display:inline-block;padding:8px 16px;background:#3a2e6e;color:#fff;border-radius:20px;font-size:13px;text-decoration:none;font-weight:bold;white-space:nowrap;flex:0 0 auto;}
 .zbtn{display:inline-block;padding:8px 12px;background:#fff;color:#3a2e6e;border:1px solid #d8d2e8;border-radius:20px;font-size:13px;cursor:pointer;transition:.2s;font-family:inherit;}
 .zbtn:hover{background:#efeaf8;}
 .zbtn.active{background:#3a2e6e;color:#fff;border-color:#3a2e6e;box-shadow:0 2px 8px rgba(58,46,110,.3);}
@@ -28,9 +30,6 @@ nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:20px 0 8px
 .qr-tip{font-size:13px;color:#ffe9b0;margin-top:6px;}
 footer{text-align:center;padding:20px 0 28px;color:#999;font-size:12px;}
 footer a{color:#3a2e6e;}
-.followbar{position:fixed;left:0;right:0;bottom:0;background:linear-gradient(135deg,#3a2e6e,#6b4fa0);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;font-size:13px;box-shadow:0 -2px 10px rgba(58,46,110,.25);z-index:50;}
-.followbar span{opacity:.95;}
-.followbar a{background:#ffd56b;color:#3a2e6e;padding:7px 16px;border-radius:20px;text-decoration:none;font-weight:bold;font-size:13px;}
 </style>
 </head>
 <body>
@@ -40,6 +39,7 @@ footer a{color:#3a2e6e;}
 <p>2026年9月1日 – 2026年9月30日 · 时光里的星与心</p>
 </header>
 <nav>
+<div class="znav">
 <button class="zbtn active" onclick="showSign('baiyang', this)">♈ 白羊座</button>
 <button class="zbtn" onclick="showSign('jinniu', this)">♉ 金牛座</button>
 <button class="zbtn" onclick="showSign('shuangzi', this)">♊ 双子座</button>
@@ -52,8 +52,10 @@ footer a{color:#3a2e6e;}
 <button class="zbtn" onclick="showSign('mojie', this)">♑ 摩羯座</button>
 <button class="zbtn" onclick="showSign('shuiping', this)">♒ 水瓶座</button>
 <button class="zbtn" onclick="showSign('shuangyu', this)">♓ 双鱼座</button>
+</div>
+<a class="follow-pill" href="#follow" onclick="document.getElementById('follow').scrollIntoView({behavior:'smooth'});return false;">关注</a>
 </nav>
-<div class="hint">💡 点击下方星座，查看你的专属本月运势</div>
+<div class="hint">💡 点击星座名字，查看你的专属本月运势</div>
 <div class="month-note">📅 适用周期：2026年9月1日 – 2026年9月30日（本月）。点击上方星座按钮可切换查看。想看当周的周运，在公众号回复「周运势」即可；回复你的星座名（如「金牛」）可收「性格解析+伴侣相处指南」两篇文章。<br>在公众号后台回复「月运势」，会自动发你本页链接；也可把本页收藏或转发给朋友，随时回看。</div>
 <div class="sign-panel active" id="panel-baiyang" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
   <h3 style="margin:0 0 4px;font-size:20px;color:#3a2e6e;">♈ 白羊座</h3>
@@ -430,10 +432,6 @@ footer a{color:#3a2e6e;}
 <p>* 占星内容仅供参考和娱乐，请理性看待 *</p>
 </footer>
 </div>
-<div class="followbar">
-<span>🌟 关注「时光里的星与心」，每月星运不错过</span>
-<a href="#follow" onclick="document.getElementById('follow').scrollIntoView({behavior:'smooth'});return false;">关注公众号</a>
-</div>
 <script>
 function showSign(key, btn){
   document.querySelectorAll('.sign-panel').forEach(function(p){p.classList.remove('active');});
@@ -441,7 +439,11 @@ function showSign(key, btn){
   if(el) el.classList.add('active');
   document.querySelectorAll('.zbtn').forEach(function(b){b.classList.remove('active');});
   if(btn) btn.classList.add('active');
-  document.getElementById('top').scrollIntoView({behavior:'smooth'});
+  if(el){
+    var navH = document.querySelector('nav').offsetHeight;
+    var y = el.getBoundingClientRect().top + window.pageYOffset - navH - 8;
+    window.scrollTo({top: y, behavior:'smooth'});
+  }
 }
 </script>
 </body>
