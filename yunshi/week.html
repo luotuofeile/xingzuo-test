@@ -6,16 +6,29 @@
 <title>12星座本周运势 · 时光里的星与心</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
 body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#f7f5f0;color:#333;line-height:1.8;}
 .wrap{max-width:720px;margin:0 auto;padding:16px;}
 header{text-align:center;padding:32px 16px 20px;background:linear-gradient(135deg,#3a2e6e,#6b4fa0);color:#fff;border-radius:0 0 18px 18px;}
 header h1{font-size:22px;letter-spacing:1px;}
 header p{font-size:13px;opacity:.85;margin-top:6px;}
-nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:20px 0 8px;}
-nav a{display:inline-block;padding:6px 12px;background:#fff;color:#3a2e6e;border:1px solid #d8d2e8;border-radius:20px;font-size:13px;text-decoration:none;transition:.2s;}
-nav a:hover{background:#3a2e6e;color:#fff;}
-.week-note{background:#fff8ec;border:1px solid #f0d9a8;border-radius:10px;padding:12px 14px;font-size:13px;color:#8a6d3b;margin:14px 0;}
-footer{text-align:center;padding:24px 0 32px;color:#999;font-size:12px;}
+nav{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:20px 0 8px;position:sticky;top:0;background:#f7f5f0;padding:8px 0;z-index:10;}
+nav .znav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;flex:1 1 auto;}
+.follow-pill{display:inline-block;padding:8px 16px;background:#3a2e6e;color:#fff;border-radius:20px;font-size:13px;text-decoration:none;font-weight:bold;white-space:nowrap;flex:0 0 auto;}
+.zbtn{display:inline-block;padding:8px 12px;background:#fff;color:#3a2e6e;border:1px solid #d8d2e8;border-radius:20px;font-size:13px;cursor:pointer;transition:.2s;font-family:inherit;}
+.zbtn:hover{background:#efeaf8;}
+.zbtn.active{background:#3a2e6e;color:#fff;border-color:#3a2e6e;box-shadow:0 2px 8px rgba(58,46,110,.3);}
+.hint{text-align:center;font-size:13px;color:#6b4fa0;margin:6px 0 2px;}
+.week-note{background:#fff8ec;border:1px solid #f0d9a8;border-radius:10px;padding:12px 14px;font-size:13px;color:#8a6d3b;margin:10px 0 16px;}
+.sign-panel{display:none;}
+.sign-panel.active{display:block;}
+.cta{background:linear-gradient(135deg,#3a2e6e,#6b4fa0);color:#fff;border-radius:14px;padding:22px 22px;margin:18px 0 10px;text-align:center;}
+.cta h3{font-size:18px;margin:0 0 8px;letter-spacing:.5px;}
+.cta p{font-size:14px;line-height:1.85;margin:6px 0;opacity:.95;}
+.qr-wrap{background:#fff;border-radius:12px;padding:12px;display:inline-block;margin:12px auto 4px;}
+.qr-wrap img{display:block;width:170px;height:170px;border-radius:8px;}
+.qr-tip{font-size:13px;color:#ffe9b0;margin-top:6px;}
+footer{text-align:center;padding:20px 0 28px;color:#999;font-size:12px;}
 footer a{color:#3a2e6e;}
 </style>
 </head>
@@ -26,118 +39,122 @@ footer a{color:#3a2e6e;}
 <p>2026年8月31日 – 2026年9月6日 · 时光里的星与心</p>
 </header>
 <nav>
-<a href="#baiyang">白羊座</a>
-<a href="#jinniu">金牛座</a>
-<a href="#shuangzi">双子座</a>
-<a href="#juxie">巨蟹座</a>
-<a href="#shizi">狮子座</a>
-<a href="#chunv">处女座</a>
-<a href="#tiancheng">天秤座</a>
-<a href="#tianxie">天蝎座</a>
-<a href="#sheshou">射手座</a>
-<a href="#mojie">摩羯座</a>
-<a href="#shuiping">水瓶座</a>
-<a href="#shuangyu">双鱼座</a>
+<div class="znav">
+<button class="zbtn active" onclick="showSign('baiyang', this)">♈ 白羊座</button>
+<button class="zbtn" onclick="showSign('jinniu', this)">♉ 金牛座</button>
+<button class="zbtn" onclick="showSign('shuangzi', this)">♊ 双子座</button>
+<button class="zbtn" onclick="showSign('juxie', this)">♋ 巨蟹座</button>
+<button class="zbtn" onclick="showSign('shizi', this)">♌ 狮子座</button>
+<button class="zbtn" onclick="showSign('chunv', this)">♍ 处女座</button>
+<button class="zbtn" onclick="showSign('tiancheng', this)">♎ 天秤座</button>
+<button class="zbtn" onclick="showSign('tianxie', this)">♏ 天蝎座</button>
+<button class="zbtn" onclick="showSign('sheshou', this)">♐ 射手座</button>
+<button class="zbtn" onclick="showSign('mojie', this)">♑ 摩羯座</button>
+<button class="zbtn" onclick="showSign('shuiping', this)">♒ 水瓶座</button>
+<button class="zbtn" onclick="showSign('shuangyu', this)">♓ 双鱼座</button>
+<a class="follow-pill" href="#follow" onclick="document.getElementById('follow').scrollIntoView({behavior:'smooth'});return false;">关注</a>
+</div>
 </nav>
-<div class="week-note">📅 适用周期：2026年8月31日 – 2026年9月6日（本周）。点击上方星座名可直达对应段落。想看整月的运程，在公众号回复「月运势」；回复你的星座名（如「金牛」）可收「性格解析+伴侣相处指南」两篇文章。</div>
-<section id="baiyang" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
+<div class="hint">💡 点击星座名字，查看你的专属本周运势</div>
+<div class="week-note">📅 适用周期：2026年8月31日 – 2026年9月6日（本周）。点击上方星座按钮可切换查看。想看整月的运程，在公众号回复「月运势」；回复你的星座名（如「金牛」）可收「性格解析+伴侣相处指南」两篇文章。<br>在公众号后台回复「周运势」，会自动发你本页链接；也可把本页收藏或转发给朋友，随时回看。</div>
+<div class="sign-panel active" id="panel-baiyang" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
   <h3 style="margin:0 0 4px;font-size:20px;color:#3a2e6e;">♈ 白羊座</h3>
   <p style="margin:0 0 14px;font-size:13px;color:#999;">火星 | 元素：火</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;">
     <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🎨 亮红色</span>
-    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🔢 16</span>
+    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🔢 9</span>
     <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">💎 红玛瑙 - 平衡火元素能量，稳定情绪</span>
   </div>
   <div style="font-size:16px;font-weight:bold;color:#6b4fa0;margin:0 0 6px;">✨ 本周综合运势</div>
   <p style="margin:0 0 4px;font-size:15px;color:#333;">★★★☆☆ 平稳</p>
   <div style="font-size:16px;font-weight:bold;color:#e74c3c;margin:14px 0 6px;">💖 感情运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">感情需要耐心，慢慢来比较快</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">感情生活平稳温馨，适合日常相处和沟通</p>
   <div style="font-size:16px;font-weight:bold;color:#f39c12;margin:14px 0 6px;">💼 事业运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">贵人运佳，容易获得认可和支持（火星在巨蟹座, 注意四分相的挑战）</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">工作效率超高，事半功倍（火星在巨蟹座, 注意四分相的挑战）</p>
   <div style="font-size:16px;font-weight:bold;color:#27ae60;margin:14px 0 6px;">💰 财运运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">量入为出，保持良好的消费习惯</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">收支平衡，适度储蓄很重要</p>
   <div style="font-size:16px;font-weight:bold;color:#16a085;margin:14px 0 6px;">🌿 温馨提醒</div>
   <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">保持热情，但也要注意控制脾气</p>
   <blockquote style="margin:16px 0 0;padding:10px 14px;background:#faf8ff;border-left:3px solid #6b4fa0;border-radius:0 8px 8px 0;color:#7a6aa8;">
-    <p style="margin:0 0 4px;">💫 勇敢追梦，不问西东</p>
-    <p style="margin:0;font-size:13px;color:#9a8cc0;">🧘 冥想焦点：化解火星与土星的冲突能量，深呼吸，寻找内在平衡</p>
+    <p style="margin:0 0 4px;">💫 你的光芒总能照亮身边的人</p>
+    
   </blockquote>
-</section>
-<section id="jinniu" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
+</div>
+<div class="sign-panel" id="panel-jinniu" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
   <h3 style="margin:0 0 4px;font-size:20px;color:#3a2e6e;">♉ 金牛座</h3>
   <p style="margin:0 0 14px;font-size:13px;color:#999;">金星 | 元素：土</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;">
     <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🎨 粉色</span>
-    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🔢 17</span>
-    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">💎 茶晶 - grounding接地，增强稳定性</span>
+    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🔢 6</span>
+    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">💎 茶晶 - 接地，增强稳定性</span>
   </div>
   <div style="font-size:16px;font-weight:bold;color:#6b4fa0;margin:0 0 6px;">✨ 本周综合运势</div>
   <p style="margin:0 0 4px;font-size:15px;color:#333;">★★★☆☆ 平稳</p>
   <div style="font-size:16px;font-weight:bold;color:#e74c3c;margin:14px 0 6px;">💖 感情运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">感情需要耐心，慢慢来比较快（金星在天秤座）</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">保持真诚，感情会在细水长流中升温（金星在天秤座）</p>
   <div style="font-size:16px;font-weight:bold;color:#f39c12;margin:14px 0 6px;">💼 事业运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">工作效率超高，事半功倍</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">职场表现亮眼，晋升机会来临</p>
   <div style="font-size:16px;font-weight:bold;color:#27ae60;margin:14px 0 6px;">💰 财运运势</div>
   <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">量入为出，保持良好的消费习惯</p>
   <div style="font-size:16px;font-weight:bold;color:#16a085;margin:14px 0 6px;">🌿 温馨提醒</div>
   <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">稳扎稳打，你的坚持会有回报</p>
   <blockquote style="margin:16px 0 0;padding:10px 14px;background:#faf8ff;border-left:3px solid #6b4fa0;border-radius:0 8px 8px 0;color:#7a6aa8;">
-    <p style="margin:0 0 4px;">💫 真诚的感情，经得起时间的考验</p>
-    <p style="margin:0;font-size:13px;color:#9a8cc0;">🧘 冥想焦点：当火星与土星形成四分相，留意节奏与沟通，深呼吸回到中心</p>
+    <p style="margin:0 0 4px;">💫 勇敢追梦，不问西东</p>
+    
   </blockquote>
-</section>
-<section id="shuangzi" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
+</div>
+<div class="sign-panel" id="panel-shuangzi" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
   <h3 style="margin:0 0 4px;font-size:20px;color:#3a2e6e;">♊ 双子座</h3>
   <p style="margin:0 0 14px;font-size:13px;color:#999;">水星 | 元素：风</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;">
     <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🎨 亮绿色</span>
-    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🔢 18</span>
+    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🔢 5</span>
     <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">💎 青金石 - 清晰思维，促进沟通</span>
   </div>
   <div style="font-size:16px;font-weight:bold;color:#6b4fa0;margin:0 0 6px;">✨ 本周综合运势</div>
   <p style="margin:0 0 4px;font-size:15px;color:#333;">★★★★☆ 良好</p>
   <div style="font-size:16px;font-weight:bold;color:#e74c3c;margin:14px 0 6px;">💖 感情运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">感情生活平稳温馨，适合日常相处和沟通（月亮在你的星座）</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">平淡中见真情，珍惜眼前人（月亮在你的星座）</p>
   <div style="font-size:16px;font-weight:bold;color:#f39c12;margin:14px 0 6px;">💼 事业运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">贵人运佳，容易获得认可和支持（水星在处女座, 水星六分相火星）</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">工作效率超高，事半功倍（水星在处女座, 水星六分相火星）</p>
   <div style="font-size:16px;font-weight:bold;color:#27ae60;margin:14px 0 6px;">💰 财运运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">理性消费，避免不必要的开支</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">财务状况平稳，适合做理财规划</p>
   <div style="font-size:16px;font-weight:bold;color:#16a085;margin:14px 0 6px;">🌿 温馨提醒</div>
   <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">思维活跃，适合学习和交流</p>
   <blockquote style="margin:16px 0 0;padding:10px 14px;background:#faf8ff;border-left:3px solid #6b4fa0;border-radius:0 8px 8px 0;color:#7a6aa8;">
-    <p style="margin:0 0 4px;">💫 你的坚持，终将美好</p>
-    <p style="margin:0;font-size:13px;color:#9a8cc0;">🧘 冥想焦点：当火星与土星形成四分相，留意节奏与沟通，深呼吸回到中心</p>
+    <p style="margin:0 0 4px;">💫 平和的心态，是最好的风水</p>
+    
   </blockquote>
-</section>
-<section id="juxie" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
+</div>
+<div class="sign-panel" id="panel-juxie" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
   <h3 style="margin:0 0 4px;font-size:20px;color:#3a2e6e;">♋ 巨蟹座</h3>
   <p style="margin:0 0 14px;font-size:13px;color:#999;">月亮 | 元素：水</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;">
     <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🎨 银色</span>
-    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🔢 19</span>
+    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🔢 2</span>
     <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">💎 月光石 - 平衡情绪，增强直觉</span>
   </div>
   <div style="font-size:16px;font-weight:bold;color:#6b4fa0;margin:0 0 6px;">✨ 本周综合运势</div>
   <p style="margin:0 0 4px;font-size:15px;color:#333;">★★★☆☆ 平稳</p>
   <div style="font-size:16px;font-weight:bold;color:#e74c3c;margin:14px 0 6px;">💖 感情运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">平淡中见真情，珍惜眼前人（月亮在双子座）</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">保持真诚，感情会在细水长流中升温（月亮在双子座）</p>
   <div style="font-size:16px;font-weight:bold;color:#f39c12;margin:14px 0 6px;">💼 事业运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">职场表现亮眼，晋升机会来临</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">事业运势强劲，是推进重要项目的好时机</p>
   <div style="font-size:16px;font-weight:bold;color:#27ae60;margin:14px 0 6px;">💰 财运运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">理性消费，避免不必要的开支</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">财务状况平稳，适合做理财规划</p>
   <div style="font-size:16px;font-weight:bold;color:#16a085;margin:14px 0 6px;">🌿 温馨提醒</div>
   <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">相信直觉，但也要理性分析</p>
   <blockquote style="margin:16px 0 0;padding:10px 14px;background:#faf8ff;border-left:3px solid #6b4fa0;border-radius:0 8px 8px 0;color:#7a6aa8;">
-    <p style="margin:0 0 4px;">💫 内心的平静，是最强大的力量</p>
-    <p style="margin:0;font-size:13px;color:#9a8cc0;">🧘 冥想焦点：当火星与土星形成四分相，留意节奏与沟通，深呼吸回到中心</p>
+    <p style="margin:0 0 4px;">💫 真诚的感情，经得起时间的考验</p>
+    
   </blockquote>
-</section>
-<section id="shizi" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
+</div>
+<div class="sign-panel" id="panel-shizi" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
   <h3 style="margin:0 0 4px;font-size:20px;color:#3a2e6e;">♌ 狮子座</h3>
   <p style="margin:0 0 14px;font-size:13px;color:#999;">太阳 | 元素：火</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;">
     <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🎨 亮金色</span>
-    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🔢 20</span>
+    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🔢 1</span>
     <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">💎 红玛瑙 - 平衡火元素能量，稳定情绪</span>
   </div>
   <div style="font-size:16px;font-weight:bold;color:#6b4fa0;margin:0 0 6px;">✨ 本周综合运势</div>
@@ -145,137 +162,137 @@ footer a{color:#3a2e6e;}
   <div style="font-size:16px;font-weight:bold;color:#e74c3c;margin:14px 0 6px;">💖 感情运势</div>
   <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">平淡中见真情，珍惜眼前人</p>
   <div style="font-size:16px;font-weight:bold;color:#f39c12;margin:14px 0 6px;">💼 事业运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">事业运势强劲，是推进重要项目的好时机（太阳在处女座, 太阳六分相火星）</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">工作效率超高，事半功倍（太阳在处女座, 太阳六分相火星）</p>
   <div style="font-size:16px;font-weight:bold;color:#27ae60;margin:14px 0 6px;">💰 财运运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">收支平衡，适度储蓄很重要</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">稳健投资，长期持有会有回报</p>
   <div style="font-size:16px;font-weight:bold;color:#16a085;margin:14px 0 6px;">🌿 温馨提醒</div>
   <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">保持热情，但也要注意控制脾气</p>
   <blockquote style="margin:16px 0 0;padding:10px 14px;background:#faf8ff;border-left:3px solid #6b4fa0;border-radius:0 8px 8px 0;color:#7a6aa8;">
-    <p style="margin:0 0 4px;">💫 今天的努力，是明天的底气</p>
-    <p style="margin:0;font-size:13px;color:#9a8cc0;">🧘 冥想焦点：当火星与土星形成四分相，留意节奏与沟通，深呼吸回到中心</p>
+    <p style="margin:0 0 4px;">💫 勇敢追梦，不问西东</p>
+    
   </blockquote>
-</section>
-<section id="chunv" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
+</div>
+<div class="sign-panel" id="panel-chunv" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
   <h3 style="margin:0 0 4px;font-size:20px;color:#3a2e6e;">♍ 处女座</h3>
   <p style="margin:0 0 14px;font-size:13px;color:#999;">水星 | 元素：土</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;">
     <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🎨 亮绿色</span>
-    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🔢 21</span>
-    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">💎 茶晶 - grounding接地，增强稳定性</span>
+    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🔢 7</span>
+    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">💎 茶晶 - 接地，增强稳定性</span>
   </div>
   <div style="font-size:16px;font-weight:bold;color:#6b4fa0;margin:0 0 6px;">✨ 本周综合运势</div>
   <p style="margin:0 0 4px;font-size:15px;color:#333;">★★★★☆ 良好</p>
   <div style="font-size:16px;font-weight:bold;color:#e74c3c;margin:14px 0 6px;">💖 感情运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">平淡中见真情，珍惜眼前人（生日月能量加持）</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">感情需要耐心，慢慢来比较快（生日月能量加持）</p>
   <div style="font-size:16px;font-weight:bold;color:#f39c12;margin:14px 0 6px;">💼 事业运势</div>
   <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">职场表现亮眼，晋升机会来临（水星在处女座, 水星六分相火星）</p>
   <div style="font-size:16px;font-weight:bold;color:#27ae60;margin:14px 0 6px;">💰 财运运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">理财收益可观，钱生钱的好时机（生日月能量加持）</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">财运亨通，可能有意外之财（生日月能量加持）</p>
   <div style="font-size:16px;font-weight:bold;color:#16a085;margin:14px 0 6px;">🌿 温馨提醒</div>
   <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">稳扎稳打，你的坚持会有回报</p>
   <blockquote style="margin:16px 0 0;padding:10px 14px;background:#faf8ff;border-left:3px solid #6b4fa0;border-radius:0 8px 8px 0;color:#7a6aa8;">
-    <p style="margin:0 0 4px;">💫 小小的改变也能带来大大的不同</p>
-    <p style="margin:0;font-size:13px;color:#9a8cc0;">🧘 冥想焦点：当火星与土星形成四分相，留意节奏与沟通，深呼吸回到中心</p>
+    <p style="margin:0 0 4px;">💫 真正的安全感，来自内心的丰盈</p>
+    
   </blockquote>
-</section>
-<section id="tiancheng" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
+</div>
+<div class="sign-panel" id="panel-tiancheng" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
   <h3 style="margin:0 0 4px;font-size:20px;color:#3a2e6e;">♎ 天秤座</h3>
   <p style="margin:0 0 14px;font-size:13px;color:#999;">金星 | 元素：风</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;">
     <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🎨 粉色</span>
-    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🔢 22</span>
+    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🔢 8</span>
     <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">💎 青金石 - 清晰思维，促进沟通</span>
   </div>
   <div style="font-size:16px;font-weight:bold;color:#6b4fa0;margin:0 0 6px;">✨ 本周综合运势</div>
   <p style="margin:0 0 4px;font-size:15px;color:#333;">★★★☆☆ 平稳</p>
   <div style="font-size:16px;font-weight:bold;color:#e74c3c;margin:14px 0 6px;">💖 感情运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">保持真诚，感情会在细水长流中升温（金星在天秤座）</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">用心经营，平凡的日子也能绽放光彩（金星在天秤座）</p>
   <div style="font-size:16px;font-weight:bold;color:#f39c12;margin:14px 0 6px;">💼 事业运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">工作效率超高，事半功倍</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">创造力爆棚，适合展现个人才华</p>
   <div style="font-size:16px;font-weight:bold;color:#27ae60;margin:14px 0 6px;">💰 财运运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">稳健投资，长期持有会有回报</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">量入为出，保持良好的消费习惯</p>
   <div style="font-size:16px;font-weight:bold;color:#16a085;margin:14px 0 6px;">🌿 温馨提醒</div>
   <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">思维活跃，适合学习和交流</p>
   <blockquote style="margin:16px 0 0;padding:10px 14px;background:#faf8ff;border-left:3px solid #6b4fa0;border-radius:0 8px 8px 0;color:#7a6aa8;">
-    <p style="margin:0 0 4px;">💫 你值得被爱，也值得爱自己</p>
-    <p style="margin:0;font-size:13px;color:#9a8cc0;">🧘 冥想焦点：当火星与土星形成四分相，留意节奏与沟通，深呼吸回到中心</p>
+    <p style="margin:0 0 4px;">💫 平和的心态，是最好的风水</p>
+    
   </blockquote>
-</section>
-<section id="tianxie" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
+</div>
+<div class="sign-panel" id="panel-tianxie" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
   <h3 style="margin:0 0 4px;font-size:20px;color:#3a2e6e;">♏ 天蝎座</h3>
   <p style="margin:0 0 14px;font-size:13px;color:#999;">冥王星 | 元素：水</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;">
     <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🎨 深紫色</span>
-    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🔢 23</span>
+    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🔢 3</span>
     <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">💎 黑曜石 - 辟邪保平安护身，抵御负面能量</span>
   </div>
   <div style="font-size:16px;font-weight:bold;color:#6b4fa0;margin:0 0 6px;">✨ 本周综合运势</div>
   <p style="margin:0 0 4px;font-size:15px;color:#333;">★★★☆☆ 平稳</p>
   <div style="font-size:16px;font-weight:bold;color:#e74c3c;margin:14px 0 6px;">💖 感情运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">用心经营，平凡的日子也能绽放光彩（冥王星在水瓶座）</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">感情需要耐心，慢慢来比较快（冥王星在水瓶座）</p>
   <div style="font-size:16px;font-weight:bold;color:#f39c12;margin:14px 0 6px;">💼 事业运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">工作效率超高，事半功倍</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">事业运势强劲，是推进重要项目的好时机</p>
   <div style="font-size:16px;font-weight:bold;color:#27ae60;margin:14px 0 6px;">💰 财运运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">稳健投资，长期持有会有回报</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">收支平衡，适度储蓄很重要</p>
   <div style="font-size:16px;font-weight:bold;color:#16a085;margin:14px 0 6px;">🌿 温馨提醒</div>
   <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">本周冥王星逆行，凡事三思而后行，不要急于做重大决定</p>
   <blockquote style="margin:16px 0 0;padding:10px 14px;background:#faf8ff;border-left:3px solid #6b4fa0;border-radius:0 8px 8px 0;color:#7a6aa8;">
-    <p style="margin:0 0 4px;">💫 耐心等待，时机终究会到来</p>
-    <p style="margin:0;font-size:13px;color:#9a8cc0;">🧘 冥想焦点：当火星与土星形成四分相，留意节奏与沟通，深呼吸回到中心</p>
+    <p style="margin:0 0 4px;">💫 平和的心态，是最好的风水</p>
+    
   </blockquote>
-</section>
-<section id="sheshou" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
+</div>
+<div class="sign-panel" id="panel-sheshou" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
   <h3 style="margin:0 0 4px;font-size:20px;color:#3a2e6e;">♐ 射手座</h3>
   <p style="margin:0 0 14px;font-size:13px;color:#999;">木星 | 元素：火</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;">
     <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🎨 亮紫色</span>
-    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🔢 24</span>
+    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🔢 11</span>
     <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">💎 红玛瑙 - 平衡火元素能量，稳定情绪</span>
   </div>
   <div style="font-size:16px;font-weight:bold;color:#6b4fa0;margin:0 0 6px;">✨ 本周综合运势</div>
   <p style="margin:0 0 4px;font-size:15px;color:#333;">★★★★☆ 良好</p>
   <div style="font-size:16px;font-weight:bold;color:#e74c3c;margin:14px 0 6px;">💖 感情运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">用心经营，平凡的日子也能绽放光彩</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">感情需要耐心，慢慢来比较快</p>
   <div style="font-size:16px;font-weight:bold;color:#f39c12;margin:14px 0 6px;">💼 事业运势</div>
   <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">事业运势强劲，是推进重要项目的好时机</p>
   <div style="font-size:16px;font-weight:bold;color:#27ae60;margin:14px 0 6px;">💰 财运运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">财运亨通，可能有意外之财（木星在狮子座, 木星三分相土星）</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">投资机会不错，但也要理性分析（木星在狮子座, 木星三分相土星）</p>
   <div style="font-size:16px;font-weight:bold;color:#16a085;margin:14px 0 6px;">🌿 温馨提醒</div>
   <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">保持热情，但也要注意控制脾气</p>
   <blockquote style="margin:16px 0 0;padding:10px 14px;background:#faf8ff;border-left:3px solid #6b4fa0;border-radius:0 8px 8px 0;color:#7a6aa8;">
-    <p style="margin:0 0 4px;">💫 你的价值，不由他人定义</p>
-    <p style="margin:0;font-size:13px;color:#9a8cc0;">🧘 冥想焦点：当火星与土星形成四分相，留意节奏与沟通，深呼吸回到中心</p>
+    <p style="margin:0 0 4px;">💫 允许自己不完美，这才是真实的美好</p>
+    
   </blockquote>
-</section>
-<section id="mojie" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
+</div>
+<div class="sign-panel" id="panel-mojie" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
   <h3 style="margin:0 0 4px;font-size:20px;color:#3a2e6e;">♑ 摩羯座</h3>
   <p style="margin:0 0 14px;font-size:13px;color:#999;">土星 | 元素：土</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;">
     <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🎨 黑色</span>
-    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🔢 25</span>
+    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🔢 10</span>
     <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">💎 黑曜石 - 辟邪保平安护身，抵御负面能量</span>
   </div>
   <div style="font-size:16px;font-weight:bold;color:#6b4fa0;margin:0 0 6px;">✨ 本周综合运势</div>
   <p style="margin:0 0 4px;font-size:15px;color:#333;">★★★☆☆ 平稳</p>
   <div style="font-size:16px;font-weight:bold;color:#e74c3c;margin:14px 0 6px;">💖 感情运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">用心经营，平凡的日子也能绽放光彩</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">感情生活平稳温馨，适合日常相处和沟通</p>
   <div style="font-size:16px;font-weight:bold;color:#f39c12;margin:14px 0 6px;">💼 事业运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">工作中保持耐心，细节决定成败（土星在白羊座, 注意四分相的挑战）</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">工作稳步推进，适合处理日常事务（土星在白羊座, 注意四分相的挑战）</p>
   <div style="font-size:16px;font-weight:bold;color:#27ae60;margin:14px 0 6px;">💰 财运运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">财务状况平稳，适合做理财规划（木星三分相土星）</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">稳健投资，长期持有会有回报（木星三分相土星）</p>
   <div style="font-size:16px;font-weight:bold;color:#16a085;margin:14px 0 6px;">🌿 温馨提醒</div>
   <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">本周土星逆行，凡事三思而后行，不要急于做重大决定</p>
   <blockquote style="margin:16px 0 0;padding:10px 14px;background:#faf8ff;border-left:3px solid #6b4fa0;border-radius:0 8px 8px 0;color:#7a6aa8;">
-    <p style="margin:0 0 4px;">💫 温柔是一种力量，不是软弱</p>
-    <p style="margin:0;font-size:13px;color:#9a8cc0;">🧘 冥想焦点：化解火星与土星的冲突能量，深呼吸，寻找内在平衡</p>
+    <p style="margin:0 0 4px;">💫 不怕慢，就怕停</p>
+    
   </blockquote>
-</section>
-<section id="shuiping" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
+</div>
+<div class="sign-panel" id="panel-shuiping" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
   <h3 style="margin:0 0 4px;font-size:20px;color:#3a2e6e;">♒ 水瓶座</h3>
   <p style="margin:0 0 14px;font-size:13px;color:#999;">天王星 | 元素：风</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;">
     <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🎨 亮蓝色</span>
-    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🔢 26</span>
+    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🔢 4</span>
     <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">💎 青金石 - 清晰思维，促进沟通</span>
   </div>
   <div style="font-size:16px;font-weight:bold;color:#6b4fa0;margin:0 0 6px;">✨ 本周综合运势</div>
@@ -285,42 +302,65 @@ footer a{color:#3a2e6e;}
   <div style="font-size:16px;font-weight:bold;color:#f39c12;margin:14px 0 6px;">💼 事业运势</div>
   <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">工作效率超高，事半功倍（天王星在双子座）</p>
   <div style="font-size:16px;font-weight:bold;color:#27ae60;margin:14px 0 6px;">💰 财运运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">理性消费，避免不必要的开支</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">量入为出，保持良好的消费习惯</p>
   <div style="font-size:16px;font-weight:bold;color:#16a085;margin:14px 0 6px;">🌿 温馨提醒</div>
   <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">思维活跃，适合学习和交流</p>
   <blockquote style="margin:16px 0 0;padding:10px 14px;background:#faf8ff;border-left:3px solid #6b4fa0;border-radius:0 8px 8px 0;color:#7a6aa8;">
-    <p style="margin:0 0 4px;">💫 不被外界打扰，守住内心的安宁</p>
-    <p style="margin:0;font-size:13px;color:#9a8cc0;">🧘 冥想焦点：当火星与土星形成四分相，留意节奏与沟通，深呼吸回到中心</p>
+    <p style="margin:0 0 4px;">💫 愿你的世界，充满温柔与爱</p>
+    
   </blockquote>
-</section>
-<section id="shuangyu" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
+</div>
+<div class="sign-panel" id="panel-shuangyu" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
   <h3 style="margin:0 0 4px;font-size:20px;color:#3a2e6e;">♓ 双鱼座</h3>
   <p style="margin:0 0 14px;font-size:13px;color:#999;">海王星 | 元素：水</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;">
     <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🎨 海蓝色</span>
-    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🔢 27</span>
+    <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">🔢 12</span>
     <span style="background:#f3effa;color:#5b4691;padding:4px 10px;border-radius:14px;font-size:12px;">💎 黑曜石 - 辟邪保平安护身，抵御负面能量</span>
   </div>
   <div style="font-size:16px;font-weight:bold;color:#6b4fa0;margin:0 0 6px;">✨ 本周综合运势</div>
   <p style="margin:0 0 4px;font-size:15px;color:#333;">★★★☆☆ 平稳</p>
   <div style="font-size:16px;font-weight:bold;color:#e74c3c;margin:14px 0 6px;">💖 感情运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">用心经营，平凡的日子也能绽放光彩（海王星在白羊座）</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">保持真诚，感情会在细水长流中升温（海王星在白羊座）</p>
   <div style="font-size:16px;font-weight:bold;color:#f39c12;margin:14px 0 6px;">💼 事业运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">职场表现亮眼，晋升机会来临</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">创造力爆棚，适合展现个人才华</p>
   <div style="font-size:16px;font-weight:bold;color:#27ae60;margin:14px 0 6px;">💰 财运运势</div>
-  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">理性消费，避免不必要的开支</p>
+  <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">财务状况平稳，适合做理财规划</p>
   <div style="font-size:16px;font-weight:bold;color:#16a085;margin:14px 0 6px;">🌿 温馨提醒</div>
   <p style="margin:0;font-size:14px;color:#555;line-height:1.7;">本周海王星逆行，凡事三思而后行，不要急于做重大决定</p>
   <blockquote style="margin:16px 0 0;padding:10px 14px;background:#faf8ff;border-left:3px solid #6b4fa0;border-radius:0 8px 8px 0;color:#7a6aa8;">
-    <p style="margin:0 0 4px;">💫 真正的安全感，来自内心的丰盈</p>
-    <p style="margin:0;font-size:13px;color:#9a8cc0;">🧘 冥想焦点：当火星与土星形成四分相，留意节奏与沟通，深呼吸回到中心</p>
+    <p style="margin:0 0 4px;">💫 专业能力是你的底气</p>
+    
   </blockquote>
-</section>
+</div>
+<div class="cta" id="follow">
+<h3>🌟 关注「时光里的星与心」</h3>
+<p>每周更新专业星象运势，陪你读星座、懂人生，在时光中慢慢成长 ✨</p>
+<p style="margin-top:10px;">👉 在微信里搜索「时光里的星与心」，点一下即可关注，第一时间收每周星运</p>
+<div class="qr-wrap"><img src="qrcode.png" alt="公众号二维码" onerror="this.parentNode.style.display='none'"/></div>
+<p class="qr-tip">👆 长按上方二维码，识别关注公众号</p>
+<p>想看星座性格和伴侣相处指南，在公众号回复星座名（如「白羊」）即可；回复「月运势」看整月运程。</p>
+<p>📮 把本页转发给关心的 TA，一起迎接美好的一周～</p>
+</div>
 <footer>
 <a href="#top" style="display:inline-block;margin-bottom:12px;background:#3a2e6e;color:#fff;padding:8px 22px;border-radius:20px;text-decoration:none;">↑ 回到顶部</a>
 <p>* 本页运势基于 Swiss Ephemeris 专业星象数据生成 *</p>
 <p>* 占星内容仅供参考和娱乐，请理性看待 *</p>
 </footer>
 </div>
+<script>
+function showSign(key, btn){
+  document.querySelectorAll('.sign-panel').forEach(function(p){p.classList.remove('active');});
+  var el=document.getElementById('panel-'+key);
+  if(el) el.classList.add('active');
+  document.querySelectorAll('.zbtn').forEach(function(b){b.classList.remove('active');});
+  if(btn) btn.classList.add('active');
+  if(el){
+    var navH = document.querySelector('nav').offsetHeight;
+    var y = el.getBoundingClientRect().top + window.pageYOffset - navH - 8;
+    window.scrollTo({top: y, behavior:'smooth'});
+  }
+}
+</script>
 </body>
 </html>
