@@ -7,21 +7,30 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-section{scroll-margin-top:10px;}
-body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#f7f5f0;color:#333;line-height:1.8;}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#f7f5f0;color:#333;line-height:1.8;padding-bottom:66px;}
 .wrap{max-width:720px;margin:0 auto;padding:16px;}
 header{text-align:center;padding:32px 16px 20px;background:linear-gradient(135deg,#3a2e6e,#6b4fa0);color:#fff;border-radius:0 0 18px 18px;}
 header h1{font-size:22px;letter-spacing:1px;}
 header p{font-size:13px;opacity:.85;margin-top:6px;}
-nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:20px 0 8px;}
-nav a{display:inline-block;padding:6px 12px;background:#fff;color:#3a2e6e;border:1px solid #d8d2e8;border-radius:20px;font-size:13px;text-decoration:none;transition:.2s;}
-nav a:hover{background:#3a2e6e;color:#fff;}
-.month-note{background:#fff8ec;border:1px solid #f0d9a8;border-radius:10px;padding:12px 14px;font-size:13px;color:#8a6d3b;margin:14px 0;}
-footer{text-align:center;padding:24px 0 32px;color:#999;font-size:12px;}
-footer a{color:#3a2e6e;}
-.cta{background:linear-gradient(135deg,#3a2e6e,#6b4fa0);color:#fff;border-radius:14px;padding:20px 22px;margin:8px 0 26px;text-align:center;}
-.cta h3{font-size:17px;margin:0 0 10px;letter-spacing:.5px;}
+nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:20px 0 8px;position:sticky;top:0;background:#f7f5f0;padding:8px 0;z-index:10;}
+.zbtn{display:inline-block;padding:8px 12px;background:#fff;color:#3a2e6e;border:1px solid #d8d2e8;border-radius:20px;font-size:13px;cursor:pointer;transition:.2s;font-family:inherit;}
+.zbtn:hover{background:#efeaf8;}
+.zbtn.active{background:#3a2e6e;color:#fff;border-color:#3a2e6e;box-shadow:0 2px 8px rgba(58,46,110,.3);}
+.hint{text-align:center;font-size:13px;color:#6b4fa0;margin:6px 0 2px;}
+.month-note{background:#fff8ec;border:1px solid #f0d9a8;border-radius:10px;padding:12px 14px;font-size:13px;color:#8a6d3b;margin:10px 0 16px;}
+.sign-panel{display:none;}
+.sign-panel.active{display:block;}
+.cta{background:linear-gradient(135deg,#3a2e6e,#6b4fa0);color:#fff;border-radius:14px;padding:22px 22px;margin:18px 0 10px;text-align:center;}
+.cta h3{font-size:18px;margin:0 0 8px;letter-spacing:.5px;}
 .cta p{font-size:14px;line-height:1.85;margin:6px 0;opacity:.95;}
+.qr-wrap{background:#fff;border-radius:12px;padding:12px;display:inline-block;margin:12px auto 4px;}
+.qr-wrap img{display:block;width:170px;height:170px;border-radius:8px;}
+.qr-tip{font-size:13px;color:#ffe9b0;margin-top:6px;}
+footer{text-align:center;padding:20px 0 28px;color:#999;font-size:12px;}
+footer a{color:#3a2e6e;}
+.followbar{position:fixed;left:0;right:0;bottom:0;background:linear-gradient(135deg,#3a2e6e,#6b4fa0);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;font-size:13px;box-shadow:0 -2px 10px rgba(58,46,110,.25);z-index:50;}
+.followbar span{opacity:.95;}
+.followbar a{background:#ffd56b;color:#3a2e6e;padding:7px 16px;border-radius:20px;text-decoration:none;font-weight:bold;font-size:13px;}
 </style>
 </head>
 <body>
@@ -31,21 +40,22 @@ footer a{color:#3a2e6e;}
 <p>2026年9月1日 – 2026年9月30日 · 时光里的星与心</p>
 </header>
 <nav>
-<a href="#baiyang">白羊座</a>
-<a href="#jinniu">金牛座</a>
-<a href="#shuangzi">双子座</a>
-<a href="#juxie">巨蟹座</a>
-<a href="#shizi">狮子座</a>
-<a href="#chunv">处女座</a>
-<a href="#tiancheng">天秤座</a>
-<a href="#tianxie">天蝎座</a>
-<a href="#sheshou">射手座</a>
-<a href="#mojie">摩羯座</a>
-<a href="#shuiping">水瓶座</a>
-<a href="#shuangyu">双鱼座</a>
+<button class="zbtn active" onclick="showSign('baiyang', this)">♈ 白羊座</button>
+<button class="zbtn" onclick="showSign('jinniu', this)">♉ 金牛座</button>
+<button class="zbtn" onclick="showSign('shuangzi', this)">♊ 双子座</button>
+<button class="zbtn" onclick="showSign('juxie', this)">♋ 巨蟹座</button>
+<button class="zbtn" onclick="showSign('shizi', this)">♌ 狮子座</button>
+<button class="zbtn" onclick="showSign('chunv', this)">♍ 处女座</button>
+<button class="zbtn" onclick="showSign('tiancheng', this)">♎ 天秤座</button>
+<button class="zbtn" onclick="showSign('tianxie', this)">♏ 天蝎座</button>
+<button class="zbtn" onclick="showSign('sheshou', this)">♐ 射手座</button>
+<button class="zbtn" onclick="showSign('mojie', this)">♑ 摩羯座</button>
+<button class="zbtn" onclick="showSign('shuiping', this)">♒ 水瓶座</button>
+<button class="zbtn" onclick="showSign('shuangyu', this)">♓ 双鱼座</button>
 </nav>
-<div class="month-note">📅 适用周期：2026年9月1日 – 2026年9月30日（本月）。点击上方星座名可直达对应段落。想看当周的周运，在公众号回复「周运势」即可；回复你的星座名（如「金牛」）可收「性格解析+伴侣相处指南」两篇文章。<br>在公众号后台回复「月运势」，会自动发你本页链接；也可把本页收藏或转发给朋友，随时回看。</div>
-<section id="baiyang" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
+<div class="hint">💡 点击下方星座，查看你的专属本月运势</div>
+<div class="month-note">📅 适用周期：2026年9月1日 – 2026年9月30日（本月）。点击上方星座按钮可切换查看。想看当周的周运，在公众号回复「周运势」即可；回复你的星座名（如「金牛」）可收「性格解析+伴侣相处指南」两篇文章。<br>在公众号后台回复「月运势」，会自动发你本页链接；也可把本页收藏或转发给朋友，随时回看。</div>
+<div class="sign-panel active" id="panel-baiyang" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
   <h3 style="margin:0 0 4px;font-size:20px;color:#3a2e6e;">♈ 白羊座</h3>
   <p style="margin:0 0 14px;font-size:13px;color:#999;">火星 | 元素：火</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;">
@@ -74,8 +84,8 @@ footer a{color:#3a2e6e;}
   <blockquote style="margin:16px 0 0;padding:10px 14px;background:#faf8ff;border-left:3px solid #6b4fa0;border-radius:0 8px 8px 0;color:#7a6aa8;">
     <p style="margin:0;">💫 简单生活，快乐自来</p>
   </blockquote>
-</section>
-<section id="jinniu" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
+</div>
+<div class="sign-panel" id="panel-jinniu" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
   <h3 style="margin:0 0 4px;font-size:20px;color:#3a2e6e;">♉ 金牛座</h3>
   <p style="margin:0 0 14px;font-size:13px;color:#999;">金星 | 元素：土</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;">
@@ -104,8 +114,8 @@ footer a{color:#3a2e6e;}
   <blockquote style="margin:16px 0 0;padding:10px 14px;background:#faf8ff;border-left:3px solid #6b4fa0;border-radius:0 8px 8px 0;color:#7a6aa8;">
     <p style="margin:0;">💫 保持乐观，好运自然来</p>
   </blockquote>
-</section>
-<section id="shuangzi" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
+</div>
+<div class="sign-panel" id="panel-shuangzi" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
   <h3 style="margin:0 0 4px;font-size:20px;color:#3a2e6e;">♊ 双子座</h3>
   <p style="margin:0 0 14px;font-size:13px;color:#999;">水星 | 元素：风</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;">
@@ -134,8 +144,8 @@ footer a{color:#3a2e6e;}
   <blockquote style="margin:16px 0 0;padding:10px 14px;background:#faf8ff;border-left:3px solid #6b4fa0;border-radius:0 8px 8px 0;color:#7a6aa8;">
     <p style="margin:0;">💫 行动是最好的答案</p>
   </blockquote>
-</section>
-<section id="juxie" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
+</div>
+<div class="sign-panel" id="panel-juxie" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
   <h3 style="margin:0 0 4px;font-size:20px;color:#3a2e6e;">♋ 巨蟹座</h3>
   <p style="margin:0 0 14px;font-size:13px;color:#999;">月亮 | 元素：水</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;">
@@ -164,8 +174,8 @@ footer a{color:#3a2e6e;}
   <blockquote style="margin:16px 0 0;padding:10px 14px;background:#faf8ff;border-left:3px solid #6b4fa0;border-radius:0 8px 8px 0;color:#7a6aa8;">
     <p style="margin:0;">💫 在喧嚣中，找到属于自己的宁静</p>
   </blockquote>
-</section>
-<section id="shizi" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
+</div>
+<div class="sign-panel" id="panel-shizi" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
   <h3 style="margin:0 0 4px;font-size:20px;color:#3a2e6e;">♌ 狮子座</h3>
   <p style="margin:0 0 14px;font-size:13px;color:#999;">太阳 | 元素：火</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;">
@@ -194,8 +204,8 @@ footer a{color:#3a2e6e;}
   <blockquote style="margin:16px 0 0;padding:10px 14px;background:#faf8ff;border-left:3px solid #6b4fa0;border-radius:0 8px 8px 0;color:#7a6aa8;">
     <p style="margin:0;">💫 你的坚持，终将美好</p>
   </blockquote>
-</section>
-<section id="chunv" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
+</div>
+<div class="sign-panel" id="panel-chunv" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
   <h3 style="margin:0 0 4px;font-size:20px;color:#3a2e6e;">♍ 处女座</h3>
   <p style="margin:0 0 14px;font-size:13px;color:#999;">水星 | 元素：土</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;">
@@ -224,8 +234,8 @@ footer a{color:#3a2e6e;}
   <blockquote style="margin:16px 0 0;padding:10px 14px;background:#faf8ff;border-left:3px solid #6b4fa0;border-radius:0 8px 8px 0;color:#7a6aa8;">
     <p style="margin:0;">💫 每一步都算数，哪怕看起来很慢</p>
   </blockquote>
-</section>
-<section id="tiancheng" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
+</div>
+<div class="sign-panel" id="panel-tiancheng" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
   <h3 style="margin:0 0 4px;font-size:20px;color:#3a2e6e;">♎ 天秤座</h3>
   <p style="margin:0 0 14px;font-size:13px;color:#999;">金星 | 元素：风</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;">
@@ -254,8 +264,8 @@ footer a{color:#3a2e6e;}
   <blockquote style="margin:16px 0 0;padding:10px 14px;background:#faf8ff;border-left:3px solid #6b4fa0;border-radius:0 8px 8px 0;color:#7a6aa8;">
     <p style="margin:0;">💫 每一次突破舒适区，都是在拓展生命的边界</p>
   </blockquote>
-</section>
-<section id="tianxie" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
+</div>
+<div class="sign-panel" id="panel-tianxie" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
   <h3 style="margin:0 0 4px;font-size:20px;color:#3a2e6e;">♏ 天蝎座</h3>
   <p style="margin:0 0 14px;font-size:13px;color:#999;">冥王星 | 元素：水</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;">
@@ -284,8 +294,8 @@ footer a{color:#3a2e6e;}
   <blockquote style="margin:16px 0 0;padding:10px 14px;background:#faf8ff;border-left:3px solid #6b4fa0;border-radius:0 8px 8px 0;color:#7a6aa8;">
     <p style="margin:0;">💫 微笑面对，世界也会对你微笑</p>
   </blockquote>
-</section>
-<section id="sheshou" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
+</div>
+<div class="sign-panel" id="panel-sheshou" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
   <h3 style="margin:0 0 4px;font-size:20px;color:#3a2e6e;">♐ 射手座</h3>
   <p style="margin:0 0 14px;font-size:13px;color:#999;">木星 | 元素：火</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;">
@@ -314,8 +324,8 @@ footer a{color:#3a2e6e;}
   <blockquote style="margin:16px 0 0;padding:10px 14px;background:#faf8ff;border-left:3px solid #6b4fa0;border-radius:0 8px 8px 0;color:#7a6aa8;">
     <p style="margin:0;">💫 每一天都是新的礼物</p>
   </blockquote>
-</section>
-<section id="mojie" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
+</div>
+<div class="sign-panel" id="panel-mojie" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
   <h3 style="margin:0 0 4px;font-size:20px;color:#3a2e6e;">♑ 摩羯座</h3>
   <p style="margin:0 0 14px;font-size:13px;color:#999;">土星 | 元素：土</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;">
@@ -344,8 +354,8 @@ footer a{color:#3a2e6e;}
   <blockquote style="margin:16px 0 0;padding:10px 14px;background:#faf8ff;border-left:3px solid #6b4fa0;border-radius:0 8px 8px 0;color:#7a6aa8;">
     <p style="margin:0;">💫 你的潜力，远超你的想象</p>
   </blockquote>
-</section>
-<section id="shuiping" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
+</div>
+<div class="sign-panel" id="panel-shuiping" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
   <h3 style="margin:0 0 4px;font-size:20px;color:#3a2e6e;">♒ 水瓶座</h3>
   <p style="margin:0 0 14px;font-size:13px;color:#999;">天王星 | 元素：风</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;">
@@ -374,8 +384,8 @@ footer a{color:#3a2e6e;}
   <blockquote style="margin:16px 0 0;padding:10px 14px;background:#faf8ff;border-left:3px solid #6b4fa0;border-radius:0 8px 8px 0;color:#7a6aa8;">
     <p style="margin:0;">💫 职场如战场，但你是自己的将军</p>
   </blockquote>
-</section>
-<section id="shuangyu" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
+</div>
+<div class="sign-panel" id="panel-shuangyu" style="background:#fff;border:1px solid #e6e1f2;border-left:4px solid #6b4fa0;border-radius:12px;padding:20px 22px;margin-bottom:26px;box-shadow:0 1px 4px rgba(60,40,110,.06);">
   <h3 style="margin:0 0 4px;font-size:20px;color:#3a2e6e;">♓ 双鱼座</h3>
   <p style="margin:0 0 14px;font-size:13px;color:#999;">海王星 | 元素：水</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;">
@@ -404,13 +414,13 @@ footer a{color:#3a2e6e;}
   <blockquote style="margin:16px 0 0;padding:10px 14px;background:#faf8ff;border-left:3px solid #6b4fa0;border-radius:0 8px 8px 0;color:#7a6aa8;">
     <p style="margin:0;">💫 你的光芒总能照亮身边的人</p>
   </blockquote>
-</section>
-<div class="cta">
+</div>
+<div class="cta" id="follow">
 <h3>🌟 关注「时光里的星与心」</h3>
 <p>每月更新专业星象运势，陪你读星座、懂人生，在时光中慢慢成长 ✨</p>
 <p style="margin-top:10px;">👉 在微信里搜索「时光里的星与心」，点一下即可关注，第一时间收每月星运</p>
-<img src="qrcode.png" alt="公众号二维码" style="display:block;width:150px;max-width:60%;margin:10px auto;border:1px solid #e0d8f0;border-radius:8px;" onerror="this.style.display='none'"/>
-<p style="font-size:12px;color:#999;margin-top:2px;">（或长按识别上方二维码关注）</p>
+<div class="qr-wrap"><img src="qrcode.png" alt="公众号二维码" onerror="this.parentNode.style.display='none'"/></div>
+<p class="qr-tip">👆 长按上方二维码，识别关注公众号</p>
 <p>想看星座性格和伴侣相处指南，在公众号回复星座名（如「白羊」）即可；回复「周运势」看当周运程。</p>
 <p>📮 把本页转发给关心的 TA，一起迎接美好的本月～</p>
 </div>
@@ -420,5 +430,19 @@ footer a{color:#3a2e6e;}
 <p>* 占星内容仅供参考和娱乐，请理性看待 *</p>
 </footer>
 </div>
+<div class="followbar">
+<span>🌟 关注「时光里的星与心」，每月星运不错过</span>
+<a href="#follow" onclick="document.getElementById('follow').scrollIntoView({behavior:'smooth'});return false;">关注公众号</a>
+</div>
+<script>
+function showSign(key, btn){
+  document.querySelectorAll('.sign-panel').forEach(function(p){p.classList.remove('active');});
+  var el=document.getElementById('panel-'+key);
+  if(el) el.classList.add('active');
+  document.querySelectorAll('.zbtn').forEach(function(b){b.classList.remove('active');});
+  if(btn) btn.classList.add('active');
+  document.getElementById('top').scrollIntoView({behavior:'smooth'});
+}
+</script>
 </body>
 </html>
