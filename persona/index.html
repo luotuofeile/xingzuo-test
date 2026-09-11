@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>你是哪种性格底色？</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(160deg, #2a2350 0%, #5042a0 55%, #7b6fd6 100%);
+    color: #fff; min-height: 100vh;
+    display: flex; justify-content: center; align-items: flex-start;
+  }
+  #app { width: 100%; max-width: 480px; padding: 24px 20px 40px; }
+  .screen { display: none; }
+  .screen.active { display: block; animation: fade .35s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: none;} }
+  .stars { font-size: 28px; text-align: center; margin-bottom: 8px; letter-spacing: 6px; }
+  h1 { font-size: 24px; font-weight: 600; text-align: center; line-height: 1.4; margin-bottom: 14px; }
+  .sub { text-align: center; font-size: 14px; opacity: .82; line-height: 1.7; margin-bottom: 28px; }
+  .btn {
+    display: block; width: 100%; padding: 15px; border: none; border-radius: 14px;
+    background: #d9d2ff; color: #1a1040; font-size: 16px; font-weight: 600;
+    cursor: pointer; margin-top: 10px; transition: transform .15s;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn.ghost { background: rgba(255,255,255,.14); color: #fff; }
+  .progress { height: 6px; background: rgba(255,255,255,.18); border-radius: 99px; margin-bottom: 18px; overflow: hidden; }
+  .progress > i { display: block; height: 100%; background: #d9d2ff; width: 0; transition: width .3s; }
+  .qcount { font-size: 13px; opacity: .8; margin-bottom: 8px; }
+  .qtext { font-size: 18px; font-weight: 500; line-height: 1.6; margin-bottom: 18px; }
+  .opt {
+    display: block; width: 100%; text-align: left; padding: 15px 16px; margin-bottom: 12px;
+    background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.18);
+    border-radius: 14px; color: #fff; font-size: 15px; line-height: 1.5; cursor: pointer;
+    transition: all .15s;
+  }
+  .opt:active { background: rgba(255,255,255,.22); border-color: #d9d2ff; }
+  .result-tag { display:inline-block; padding:4px 12px; border-radius:99px; background:rgba(255,255,255,.2); color:#d9d2ff; font-size:13px; margin-bottom:12px; }
+  .result-title { font-size: 26px; font-weight: 600; margin-bottom: 6px; }
+  .result-const { font-size: 14px; opacity: .85; margin-bottom: 16px; }
+  .result-desc { font-size: 15px; line-height: 1.85; opacity: .94; margin-bottom: 16px;
+    background: rgba(255,255,255,.08); padding: 16px; border-radius: 14px; }
+  .result-quote { font-size: 15px; text-align: center; color: #d9d2ff; font-weight: 500;
+    padding: 14px; border-top: 1px dashed rgba(255,255,255,.3); border-bottom: 1px dashed rgba(255,255,255,.3); margin-bottom: 20px; line-height:1.6; }
+  .sharecard { width: 100%; border-radius: 14px; margin-bottom: 14px; display: none; }
+  .tip { text-align: center; font-size: 12px; opacity: .7; margin-top: 10px; line-height: 1.6; }
+  .foot { text-align:center; font-size:12px; opacity:.6; margin-top:22px; line-height:1.7; }
+</style>
+</head>
+<body>
+<div id="app">
+  <section id="cover" class="screen active">
+    <div class="stars">✦ ✧ ✦</div>
+    <h1>你是哪种<br>性格底色？</h1>
+    <p class="sub">不考星座知识，只测你做决定时的天然倾向。<br>10 个小问题，2–3 分钟，看清你的性格主导型。</p>
+    <button class="btn" onclick="start()">开始测试 ✨</button>
+    <p class="foot">关注【时光里的星与心】<br>回复「测试」随时再测</p>
+  </section>
+  <section id="quiz" class="screen">
+    <div class="progress"><i id="bar"></i></div>
+    <div class="qcount" id="qcount"></div>
+    <div class="qtext" id="qtext"></div>
+    <div id="opts"></div>
+  </section>
+  <section id="result" class="screen">
+    <div style="text-align:center">
+      <span class="result-tag" id="r-tag"></span>
+      <div class="result-title" id="r-title"></div>
+      <div class="result-const" id="r-const"></div>
+    </div>
+    <div class="result-desc" id="r-desc"></div>
+    <div class="result-quote" id="r-quote"></div>
+    <img class="sharecard" id="card" alt="分享卡">
+    <button class="btn" onclick="makeCard()">生成我的分享卡 📲</button>
+    <button class="btn ghost" onclick="restart()">再测一次</button>
+    <p class="tip">长按上方分享卡即可保存 / 转发给朋友</p>
+    <p class="foot">关注【时光里的星与心】回复「测试」随时再测<br>了解自己，是温柔的开始。</p>
+  </section>
+</div>
+<script>
+var questions = [{"q": "面对一个全新机会，你的第一反应？", "o": [{"t": "先冲了再说", "d": "A"}, {"t": "先查资料、想清楚", "d": "B"}, {"t": "看身边人怎么看、感觉对不对", "d": "C"}, {"t": "凭直觉，觉得行就试", "d": "D"}]}, {"q": "一群人讨论，你通常？", "o": [{"t": "抢着说、带头定方案", "d": "A"}, {"t": "等想明白了再发表", "d": "B"}, {"t": "先听气氛、照顾大家情绪", "d": "C"}, {"t": "抛个跳跃的点子打破僵局", "d": "D"}]}, {"q": "你更相信哪种判断依据？", "o": [{"t": "做过比想过重要", "d": "A"}, {"t": "逻辑和证据", "d": "B"}, {"t": "自己的感受对不对", "d": "C"}, {"t": "说不清但就是知道", "d": "D"}]}, {"q": "周末你更想怎么过？", "o": [{"t": "出门浪、动起来", "d": "A"}, {"t": "宅家看书、研究点东西", "d": "B"}, {"t": "约朋友聊天倾诉", "d": "C"}, {"t": "一个人发呆、想事情", "d": "D"}]}, {"q": "别人说你「太冲动」时，你内心？", "o": [{"t": "那叫行动力", "d": "A"}, {"t": "我明明想得很清楚", "d": "B"}, {"t": "我只是跟着心走", "d": "C"}, {"t": "我就是信感觉", "d": "D"}]}, {"q": "做计划你偏向？", "o": [{"t": "计划赶不上变化，走一步看一步", "d": "A"}, {"t": "列清单、按步骤来", "d": "B"}, {"t": "大致方向有就行，灵活点", "d": "C"}, {"t": "只看终点，过程随缘", "d": "D"}]}, {"q": "朋友找你倾诉，你先？", "o": [{"t": "直接给办法、拉他去做点啥", "d": "A"}, {"t": "帮他理清问题到底在哪", "d": "B"}, {"t": "先陪着、共情他的情绪", "d": "C"}, {"t": "点一句「你其实知道答案」", "d": "D"}]}, {"q": "学新东西你更喜欢？", "o": [{"t": "动手试错最快", "d": "A"}, {"t": "先搞懂原理", "d": "B"}, {"t": "有人带着、有氛围", "d": "C"}, {"t": "抓重点、找感觉", "d": "D"}]}, {"q": "你最怕被说？", "o": [{"t": "懒、没干劲", "d": "A"}, {"t": "没脑子、想太浅", "d": "B"}, {"t": "冷漠、不近人情", "d": "C"}, {"t": "不靠谱、飘", "d": "D"}]}, {"q": "让你最有成就感的是？", "o": [{"t": "把事干成了", "d": "A"}, {"t": "想通了一个难题", "d": "B"}, {"t": "被人需要、关系更近", "d": "C"}, {"t": "看见了别人没看见的可能", "d": "D"}]}];
+var results = {"A": {"tag": "行动派", "title": "你是「行动派」", "const": "最合：直觉派 / 思考派", "desc": "你先动再想，行动就是你的语言。你不怕试错，很多事在你手里就推进了。要留意的是偶尔想太浅、冲太快——偶尔停一步，反而走更远。", "quote": "你不缺想法，缺的是先迈出的那一步，而你恰恰最会迈。"}, "B": {"tag": "思考派", "title": "你是「思考派」", "const": "最合：行动派 / 感受派", "desc": "你先想再做，逻辑是你的底气。你不轻易下结论，凡事讲证据。要留意的是有时想太多、错过节奏——想清楚很好，但别让它变成不动。", "quote": "想清楚再走，是你给自己最稳的底牌。"}, "C": {"tag": "感受派", "title": "你是「感受派」", "const": "最合：思考派 / 直觉派", "desc": "你跟着心走，关系与情绪是你的雷达。你敏感、能共情，身边人觉得你暖。要留意的是容易被人情绪带跑——温柔自己的同时，也记得守住边界。", "quote": "你最珍贵的，是能接住别人情绪的那份温柔。"}, "D": {"tag": "直觉派", "title": "你是「直觉派」", "const": "最合：行动派 / 感受派", "desc": "你信感觉，常一眼看穿本质。你不被细节困住，擅长抓大方向。要留意的是有时说不清理由、显得飘——偶尔把感觉翻译成几句话，别人更容易跟上你。", "quote": "你看见的，往往是别人还没看见的可能。"}};
+var i = 0, score = {A:0,B:0,C:0,D:0};
+function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
+function start(){ i=0; score={A:0,B:0,C:0,D:0}; render(); show('quiz'); }
+function render(){
+  var q = questions[i];
+  document.getElementById('qcount').textContent = "第 " + (i+1) + " / " + questions.length + " 题";
+  document.getElementById('bar').style.width = ((i)/questions.length*100) + "%";
+  document.getElementById('qtext').textContent = q.q;
+  var box = document.getElementById('opts'); box.innerHTML = "";
+  q.o.forEach(function(op){
+    var b = document.createElement('button');
+    b.className = "opt"; b.textContent = op.t;
+    b.onclick = function(){ choose(op.d); };
+    box.appendChild(b);
+  });
+}
+function choose(d){ score[d]++; i++;
+  if(i < questions.length){ render(); }
+  else { document.getElementById('bar').style.width = "100%"; finish(); }
+}
+function finish(){
+  var keys = ["A","B","C","D"];
+  var max = -1;
+  keys.forEach(function(k){ if(score[k] > max) max = score[k]; });
+  var tied = keys.filter(function(k){ return score[k] === max; });
+  var sorted = keys.slice().sort(function(a,b){ return score[b]-score[a]; });
+  var primary = sorted[0];
+  var r = results[primary];
+  if (tied.length >= 2) {
+    // 平局：并列第一的类型全部展示，消除「静默偏向某一型」的不公
+    var names = tied.map(function(k){ return results[k].title.replace("你是「","").replace("」",""); });
+    var tags = tied.map(function(k){ return results[k].tag; });
+    var consts = tied.map(function(k){ return results[k].const.replace("最合：",""); });
+    document.getElementById('r-tag').textContent = "混合型底色";
+    document.getElementById('r-title').textContent = "你是「" + names.join(" + ") + "」混合型";
+    document.getElementById('r-const').textContent = "最合：" + consts.join(" / ");
+    document.getElementById('r-desc').textContent = "你的性格没有单一答案——" + tags.join("、") + "的特质在你身上并存。和这些类型相处，你都容易合拍；你本就兼收并蓄。";
+    document.getElementById('r-quote').textContent = "你要的成长，是可以又果敢又深思、又温柔又通透的。";
+  } else {
+    document.getElementById('r-tag').textContent = r.tag;
+    document.getElementById('r-title').textContent = r.title;
+    document.getElementById('r-const').textContent = r.const;
+    document.getElementById('r-desc').textContent = r.desc;
+    document.getElementById('r-quote').textContent = r.quote;
+  }
+  document.getElementById('card').style.display = "none";
+  show('result');
+}
+function restart(){ show('cover'); }
+function makeCard(){
+  var cv = document.createElement('canvas'); cv.width = 600; cv.height = 800;
+  var x = cv.getContext('2d');
+  var g = x.createLinearGradient(0,0,0,800);
+  g.addColorStop(0,"#2a2350"); g.addColorStop(.55,"#5042a0"); g.addColorStop(1,"#7b6fd6");
+  x.fillStyle = g; x.fillRect(0,0,600,800);
+  x.textAlign = "center"; x.fillStyle = "#d9d2ff";
+  x.font = "600 26px sans-serif"; x.fillText("✦  性格底色测试  ✦", 300, 90);
+  x.fillStyle = "#fff"; x.font = "600 52px sans-serif";
+  x.fillText(document.getElementById('r-title').textContent.replace("你是「","").replace("」",""), 300, 200);
+  x.fillStyle = "#d9d2ff"; x.font = "500 20px sans-serif";
+  x.fillText(document.getElementById('r-const').textContent, 300, 250);
+  x.fillStyle = "rgba(255,255,255,.92)"; x.font = "16px sans-serif";
+  wrapText(x, document.getElementById('r-desc').textContent, 300, 320, 480, 28);
+  x.fillStyle = "#d9d2ff"; x.font = "600 22px sans-serif";
+  wrapText(x, document.getElementById('r-quote').textContent, 300, 600, 480, 32);
+  x.fillStyle = "rgba(255,255,255,.7)"; x.font = "14px sans-serif";
+  x.fillText("关注【时光里的星与心】回复「测试」随时再测", 300, 720);
+  x.fillText("扫码/搜索公众号：时光里的星与心", 300, 748);
+  var img = document.getElementById('card');
+  img.src = cv.toDataURL("image/png");
+  img.style.display = "block";
+  img.scrollIntoView({behavior:"smooth", block:"center"});
+}
+function wrapText(ctx, text, cx, y, maxW, lh){
+  var line = "", lines = [];
+  for(var n=0; n<text.length; n++){
+    var t = line + text[n];
+    if(ctx.measureText(t).width > maxW && line){ lines.push(line); line = text[n]; }
+    else line = t;
+  }
+  if(line) lines.push(line);
+  lines.forEach(function(l, k){ ctx.fillText(l, cx, y + k*lh); });
+}
+</script>
+</body>
+</html>
