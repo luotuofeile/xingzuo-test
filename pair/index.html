@@ -103,14 +103,30 @@ function choose(d){ score[d]++; i++;
   else { document.getElementById('bar').style.width = "100%"; finish(); }
 }
 function finish(){
-  var best = "A", max = -1;
-  ["A","B","C","D"].forEach(function(k){ if(score[k] > max){ max = score[k]; best = k; } });
-  var r = results[best];
-  document.getElementById('r-tag').textContent = r.tag;
-  document.getElementById('r-title').textContent = r.title;
-  document.getElementById('r-const').textContent = r.const;
-  document.getElementById('r-desc').textContent = r.desc;
-  document.getElementById('r-quote').textContent = r.quote;
+  var keys = ["A","B","C","D"];
+  var max = -1;
+  keys.forEach(function(k){ if(score[k] > max) max = score[k]; });
+  var tied = keys.filter(function(k){ return score[k] === max; });
+  var sorted = keys.slice().sort(function(a,b){ return score[b]-score[a]; });
+  var primary = sorted[0];
+  var r = results[primary];
+  if (tied.length >= 2) {
+    // 平局：并列第一的类型全部展示，消除「静默偏向火象」的不公
+    var names = tied.map(function(k){ return results[k].title.replace("你是「","").replace("」",""); });
+    var tags = tied.map(function(k){ return results[k].tag; });
+    var consts = tied.map(function(k){ return results[k].const.replace("最合：",""); });
+    document.getElementById('r-tag').textContent = "混合型缘分";
+    document.getElementById('r-title').textContent = "你是「" + names.join(" + ") + "」混合型";
+    document.getElementById('r-const').textContent = "最合：" + consts.join(" / ");
+    document.getElementById('r-desc').textContent = "你的吸引力没有单一答案——" + tags.join("、") + "的特质在你身上并存。和这些星座相处，都容易擦出火花；你本就兼收并蓄。";
+    document.getElementById('r-quote').textContent = "你要的爱，是可以又热烈又踏实、又自由又温柔的。";
+  } else {
+    document.getElementById('r-tag').textContent = r.tag;
+    document.getElementById('r-title').textContent = r.title;
+    document.getElementById('r-const').textContent = r.const;
+    document.getElementById('r-desc').textContent = r.desc;
+    document.getElementById('r-quote').textContent = r.quote;
+  }
   document.getElementById('card').style.display = "none";
   show('result');
 }
